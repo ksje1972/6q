@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IQテスト</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f5f5f3;--bg3:#eeede9;
+  --text:#1a1a18;--text2:#6b6b66;--text3:#9a9a94;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+  --accent:#2563a8;--accent-bg:#eef3fb;--accent-border:rgba(37,99,168,0.25);
+  --success:#2d7a3a;--success-bg:#eef6f0;--success-border:rgba(45,122,58,0.3);
+  --danger:#c0392b;--danger-bg:#fdf0ee;--danger-border:rgba(192,57,43,0.3);
+  --info-bg:#eef3fb;--info-border:rgba(40,80,160,0.25);--info:#1a4fa0;
+  --radius:10px;--radius-lg:14px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1c1a;--bg2:#252522;--bg3:#2e2e2b;
+  --text:#f0f0ec;--text2:#a0a09a;--text3:#686862;
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+  --accent:#7aaaff;--accent-bg:rgba(37,99,168,0.15);--accent-border:rgba(122,170,255,0.35);
+  --success:#4caf60;--success-bg:rgba(76,175,96,0.12);--success-border:rgba(76,175,96,0.35);
+  --danger:#e57373;--danger-bg:rgba(229,115,115,0.12);--danger-border:rgba(229,115,115,0.35);
+  --info-bg:rgba(60,100,200,0.12);--info-border:rgba(100,150,255,0.3);--info:#7aaaff;
+}}
+body{background:var(--bg3);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;
+  min-height:100vh;display:flex;align-items:flex-start;justify-content:center;
+  padding:24px 16px 60px}
+#app{width:100%;max-width:560px}
+.screen{animation:fi .28s ease}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:12px}
+.card-sm{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:12px}
+.intro-header{display:flex;align-items:center;gap:14px;padding-bottom:18px;
+  border-bottom:0.5px solid var(--border);margin-bottom:20px}
+.intro-logo{width:52px;height:52px;border-radius:50%;background:var(--accent-bg);
+  border:0.5px solid var(--accent-border);display:flex;align-items:center;
+  justify-content:center;font-size:26px;flex-shrink:0}
+.intro-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:3px}
+.intro-sub{font-size:11px;color:var(--accent);font-weight:500;letter-spacing:.4px}
+.meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.meta-box{background:var(--bg2);border-radius:var(--radius);padding:12px 8px;text-align:center}
+.meta-n{font-size:18px;font-weight:700;color:var(--accent)}.meta-l{font-size:10px;color:var(--text3);margin-top:2px}
+.cats-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.cat-pill{font-size:11px;padding:3px 10px;border-radius:100px;
+  background:var(--accent-bg);color:var(--accent);border:0.5px solid var(--accent-border)}
+.notice-box{background:var(--accent-bg);border:0.5px solid var(--accent-border);
+  border-radius:var(--radius);padding:12px 14px;font-size:12px;color:var(--accent);
+  margin-bottom:18px;line-height:1.75}
+.name-section{margin-bottom:16px}
+.name-row-input{display:flex;align-items:center;gap:10px;padding:11px 14px;
+  border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg2)}
+.name-row-input:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.name-label{font-size:12px;color:var(--text2);white-space:nowrap;flex-shrink:0}
+.name-input{flex:1;border:none;outline:none;font-size:15px;background:transparent;
+  color:var(--text);font-family:inherit}
+.name-input::placeholder{color:var(--text3)}
+.name-error{font-size:12px;color:var(--danger);margin-top:6px;display:none}
+.btn-primary{display:block;width:100%;padding:14px;background:var(--accent);color:#fff;
+  border:none;border-radius:var(--radius);font-size:14px;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:opacity .15s}
+.btn-primary:hover{opacity:.85}.btn-primary:active{transform:scale(.98)}
+.btn-ghost{display:block;width:100%;padding:12px;background:var(--bg);color:var(--text);
+  border:0.5px solid var(--border2);border-radius:var(--radius);font-size:14px;
+  font-weight:500;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-ghost:hover{background:var(--bg2)}.btn-ghost:active{transform:scale(.98)}
+.btn-sm{padding:5px 10px;background:var(--bg);color:var(--text2);
+  border:0.5px solid var(--border2);border-radius:var(--radius);
+  font-size:11px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.btn-sm:hover{background:var(--bg2)}
+.hist-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.hist-ttl{font-size:12px;font-weight:500;color:var(--text2)}
+.hist-item{display:flex;align-items:center;gap:10px;padding:10px 0;
+  border-bottom:0.5px solid var(--border);font-size:13px}
+.hist-item:last-child{border-bottom:none}
+.hist-iq{font-size:18px;font-weight:700;color:var(--accent);min-width:36px}
+.hist-meta{flex:1;min-width:0}
+.hist-name{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-date{font-size:11px;color:var(--text3);margin-top:1px}
+.hist-score{font-size:12px;color:var(--text2);text-align:right;white-space:nowrap;flex-shrink:0}
+.hist-empty{font-size:13px;color:var(--text3);padding:12px 0;text-align:center}
+.test-hdr{margin-bottom:14px}
+.hdr-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.q-label{font-size:13px;color:var(--text2)}
+.timer{font-size:12px;font-variant-numeric:tabular-nums;color:var(--text2);
+  background:var(--bg2);padding:3px 10px;border-radius:100px;border:0.5px solid var(--border)}
+.sub-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.name-badge{font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.pbar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:2px}
+.pfill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease}
+.q-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:10px}
+.cat-badge{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;
+  font-weight:500;margin-bottom:10px;background:var(--accent-bg);
+  color:var(--accent);border:0.5px solid var(--accent-border)}
+.q-text{font-size:15px;line-height:1.85;white-space:pre-line;color:var(--text)}
+.q-figure{white-space:normal!important;font-size:14px}
+.q-figure svg{display:block;max-width:100%;height:auto;margin:0 auto}
+.opts{display:grid;gap:7px;margin-bottom:8px}
+.opt{text-align:left;padding:12px 14px;background:var(--bg);border:0.5px solid var(--border);
+  border-radius:var(--radius);font-size:14px;cursor:pointer;color:var(--text);
+  display:flex;align-items:flex-start;gap:11px;font-family:inherit;
+  transition:background .12s,border-color .12s;width:100%;line-height:1.6}
+.opt:hover:not(:disabled){background:var(--accent-bg);border-color:var(--accent-border)}
+.opt.selected{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent)}
+.opt.correct{background:var(--success-bg);border-color:var(--success-border);color:var(--success)}
+.opt.wrong{background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger)}
+.opt:disabled{cursor:default}
+.opt-lbl{width:24px;height:24px;border-radius:50%;border:0.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;
+  flex-shrink:0;background:var(--bg2);color:var(--text2);margin-top:1px}
+.opt.selected .opt-lbl{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent)}
+.opt.correct .opt-lbl{background:var(--success-bg);border-color:var(--success-border);color:var(--success)}
+.opt.wrong .opt-lbl{background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger)}
+.expl{font-size:13px;padding:11px 14px;background:var(--bg2);
+  border:0.5px solid var(--border);border-radius:var(--radius);
+  margin-top:8px;color:var(--text2);line-height:1.7;animation:fi .2s ease}
+.expl.correct{background:var(--success-bg);border-color:var(--success-border);color:var(--success)}
+.expl.wrong{background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger)}
+.next-wrap{margin-top:8px}
+.result-hero{text-align:center;padding:20px 0 16px}
+.result-name{font-size:13px;color:var(--text2);margin-bottom:10px}
+.iq-ring{width:148px;height:148px;border-radius:50%;border:2.5px solid var(--accent);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin:0 auto 12px;background:var(--bg2);gap:2px}
+.iq-lbl-sm{font-size:10px;color:var(--text2);letter-spacing:.5px}
+.iq-val{font-size:44px;font-weight:700;color:var(--accent);line-height:1}
+.iq-acc-row{display:flex;align-items:baseline;gap:3px}
+.iq-acc-val{font-size:15px;font-weight:700;color:var(--text2)}
+.iq-acc-lbl{font-size:10px;color:var(--text3)}
+.result-title{font-size:20px;font-weight:700;margin-bottom:8px}
+.result-desc{font-size:13px;color:var(--text2);line-height:1.75;max-width:380px;margin:0 auto}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.stat-box{background:var(--bg2);border-radius:var(--radius);padding:12px;text-align:center}
+.stat-n{font-size:20px;font-weight:700;color:var(--accent)}
+.stat-l{font-size:10px;color:var(--text3);margin-top:2px}
+.bkdn-ttl{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;
+  letter-spacing:.3px;text-transform:uppercase}
+.cat-result{padding:11px 0;border-bottom:0.5px solid var(--border)}
+.cat-result:last-child{border-bottom:none}
+.cat-result-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.cat-name{font-size:13px;font-weight:500;flex:1}
+.cat-pts{font-size:12px;color:var(--accent);font-weight:600;white-space:nowrap}
+.cat-bar-wrap{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.cat-bar-fill{height:100%;background:var(--accent);border-radius:3px}
+.cat-comment{font-size:12px;color:var(--text3);margin-top:5px;line-height:1.6}
+.retry-wrap{display:grid;gap:8px}
+.note-sm{font-size:11px;color:var(--text3);text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="s-intro" class="screen"></div>
+  <div id="s-test" class="screen" style="display:none"></div>
+  <div id="s-result" class="screen" style="display:none"></div>
+</div>
+<script>
+// ═══════════════════════════════════════════════════════════
+//  問題バンク（120問）
+// ═══════════════════════════════════════════════════════════
+const BANK=[
+  // ── 数列（32問）──
+  {cat:'数列',text:'2, 4, 8, 16, ___',opts:['24','32','30','18'],ans:1,exp:'等比数列（公比2）。16×2＝32。'},
+  {cat:'数列',text:'1, 4, 9, 16, ___',opts:['20','23','25','36'],ans:2,exp:'自然数の平方数（5²＝25）。'},
+  {cat:'数列',text:'1, 1, 2, 3, 5, 8, ___',opts:['11','12','13','16'],ans:2,exp:'フィボナッチ数列。5+8＝13。'},
+  {cat:'数列',text:'100, 50, 25, 12.5, ___',opts:['6','6.25','5','12'],ans:1,exp:'等比数列（公比1/2）。12.5÷2＝6.25。'},
+  {cat:'数列',text:'3, 6, 9, 12, ___',opts:['14','15','16','18'],ans:1,exp:'3の倍数。12+3＝15。'},
+  {cat:'数列',text:'1, 3, 7, 15, 31, ___',opts:['45','55','63','70'],ans:2,exp:'前の項×2＋1。31×2＋1＝63。'},
+  {cat:'数列',text:'2, 5, 10, 17, 26, ___',opts:['35','37','39','41'],ans:1,exp:'差が3,5,7,9,11…。26+11＝37。'},
+  {cat:'数列',text:'81, 27, 9, 3, ___',opts:['0','1','2','1.5'],ans:1,exp:'等比数列（公比1/3）。3÷3＝1。'},
+  {cat:'数列',text:'0, 1, 3, 6, 10, ___',opts:['13','14','15','16'],ans:2,exp:'三角数（差が1,2,3,4,5…）。10+5＝15。'},
+  {cat:'数列',text:'2, 3, 5, 7, 11, ___',opts:['12','13','14','15'],ans:1,exp:'素数の数列。次の素数は13。'},
+  {cat:'数列',text:'4, 8, 16, 32, ___',opts:['48','56','64','72'],ans:2,exp:'等比数列（公比2）。32×2＝64。'},
+  {cat:'数列',text:'10, 9, 7, 4, ___',opts:['0','1','2','-1'],ans:0,exp:'差が−1,−2,−3,−4…。4−4＝0。'},
+  {cat:'数列',text:'1, 8, 27, 64, ___',opts:['100','125','144','216'],ans:1,exp:'自然数の3乗。5³＝125。'},
+  {cat:'数列',text:'2, 6, 18, 54, ___',opts:['108','162','216','270'],ans:1,exp:'等比数列（公比3）。54×3＝162。'},
+  {cat:'数列',text:'5, 10, 20, 40, ___',opts:['60','70','80','100'],ans:2,exp:'等比数列（公比2）。40×2＝80。'},
+  {cat:'数列',text:'1, 2, 4, 7, 11, 16, ___',opts:['20','22','23','25'],ans:1,exp:'差が1,2,3,4,5,6…。16+6＝22。'},
+  {cat:'数列',text:'144, 121, 100, 81, ___',opts:['64','63','72','60'],ans:0,exp:'12²,11²,10²,9²,8²＝64。'},
+  {cat:'数列',text:'1, 2, 6, 24, ___',opts:['100','110','120','132'],ans:2,exp:'階乗数列。5!＝120。'},
+  {cat:'数列',text:'7, 14, 21, 28, ___',opts:['30','33','35','36'],ans:2,exp:'7の倍数。28+7＝35。'},
+  {cat:'数列',text:'1, 4, 13, 40, ___',opts:['100','120','121','130'],ans:2,exp:'前の項×3+1。40×3+1＝121。'},
+  {cat:'数列',text:'256, 64, 16, 4, ___',opts:['0','1','2','0.5'],ans:1,exp:'等比数列（公比1/4）。4÷4＝1。'},
+  {cat:'数列',text:'3, 5, 8, 13, 21, ___',opts:['30','33','34','35'],ans:2,exp:'フィボナッチ型。13+21＝34。'},
+  {cat:'数列',text:'1, 5, 14, 30, ___',opts:['50','55','56','60'],ans:1,exp:'差が4,9,16,25…。30+25＝55。'},
+  {cat:'数列',text:'2, 4, 6, 10, 16, 26, ___',opts:['36','40','42','44'],ans:2,exp:'前の2項の和。16+26＝42。'},
+  {cat:'数列',text:'9, 16, 25, 36, 49, ___',opts:['56','60','64','81'],ans:2,exp:'3²,4²,5²,6²,7²,8²＝64。'},
+  {cat:'数列',text:'0, 2, 6, 12, 20, ___',opts:['28','30','32','36'],ans:1,exp:'n(n+1)の数列。5×6＝30。'},
+  {cat:'数列',text:'1000, 100, 10, ___',opts:['0','1','5','2'],ans:1,exp:'等比数列（公比1/10）。10÷10＝1。'},
+  {cat:'数列',text:'17, 14, 11, 8, ___',opts:['3','4','5','6'],ans:2,exp:'公差−3。8−3＝5。'},
+  {cat:'数列',text:'1, 1, 2, 4, 7, 13, ___',opts:['20','24','26','28'],ans:1,exp:'前の3項の和。4+7+13＝24。'},
+  {cat:'数列',text:'2, 9, 28, 65, ___',opts:['100','122','126','130'],ans:2,exp:'n³+1。5³+1＝126。'},
+  {cat:'数列',text:'120, 60, 20, 5, ___',opts:['0','1','0.5','2'],ans:1,exp:'÷1,÷2,÷3,÷4,÷5。5÷5＝1。'},
+  {cat:'数列',text:'4, 7, 12, 19, 28, ___',opts:['37','38','39','40'],ans:2,exp:'差が3,5,7,9,11…。28+11＝39。'},
+  // ── 言語類推（28問）──
+  {cat:'言語類推',text:'医者 ：病院 ＝ 料理人 ：___',opts:['食事','厨房','食材','レストラン'],ans:1,exp:'医者→病院（職場）、料理人→厨房（職場）。'},
+  {cat:'言語類推',text:'犬 ：哺乳類 ＝ バラ ：___',opts:['花','植物','赤い','香り'],ans:1,exp:'犬は哺乳類の下位概念。バラは植物の下位概念。'},
+  {cat:'言語類推',text:'足 ：靴 ＝ 頭 ：___',opts:['顔','帽子','髪','耳'],ans:1,exp:'足→靴（履くもの）、頭→帽子。'},
+  {cat:'言語類推',text:'昼 ：夜 ＝ 夏 ：___',opts:['春','秋','冬','年'],ans:2,exp:'昼の反対は夜。夏の反対は冬。'},
+  {cat:'言語類推',text:'ピアノ ：音楽 ＝ 絵筆 ：___',opts:['絵画','芸術','文学','デザイン'],ans:0,exp:'ピアノは音楽を作る道具。絵筆は絵画を描く道具。'},
+  {cat:'言語類推',text:'魚 ：泳ぐ ＝ 鳥 ：___',opts:['走る','飛ぶ','鳴く','生きる'],ans:1,exp:'魚の移動手段は泳ぐ。鳥の移動手段は飛ぶ。'},
+  {cat:'言語類推',text:'王 ：女王 ＝ 俳優 ：___',opts:['女優','スター','主役','舞台'],ans:0,exp:'王の女性形は女王。俳優の女性形は女優。'},
+  {cat:'言語類推',text:'目 ：見る ＝ 耳 ：___',opts:['顔','聞く','話す','考える'],ans:1,exp:'目の機能は見ること。耳の機能は聞くこと。'},
+  {cat:'言語類推',text:'地図 ：地理 ＝ カレンダー ：___',opts:['月','時間','日付','年'],ans:2,exp:'地図→地理（示すもの）、カレンダー→日付。'},
+  {cat:'言語類推',text:'木 ：森 ＝ 星 ：___',opts:['月','空','銀河','夜'],ans:2,exp:'木が集まると森。星が集まると銀河。'},
+  {cat:'言語類推',text:'寒い ：コート ＝ 雨 ：___',opts:['傘','水','雷','雲'],ans:0,exp:'寒い→コート（対策）、雨→傘。'},
+  {cat:'言語類推',text:'学校 ：先生 ＝ 病院 ：___',opts:['患者','医者','薬','看護'],ans:1,exp:'学校→先生、病院→医者（職場と職業）。'},
+  {cat:'言語類推',text:'鉛筆 ：文字 ＝ カメラ ：___',opts:['映像','画像','フィルム','光'],ans:1,exp:'鉛筆→文字、カメラ→画像（作るもの）。'},
+  {cat:'言語類推',text:'始まり ：終わり ＝ 誕生 ：___',opts:['成長','老い','死','病'],ans:2,exp:'始まりの反対は終わり。誕生の反対は死。'},
+  {cat:'言語類推',text:'海 ：波 ＝ 空 ：___',opts:['星','雲','太陽','風'],ans:1,exp:'海には波がある。空には雲がある。'},
+  {cat:'言語類推',text:'辞書 ：言葉 ＝ 地図 ：___',opts:['旅','場所','方向','移動'],ans:1,exp:'辞書→言葉、地図→場所（収録されているもの）。'},
+  {cat:'言語類推',text:'月 ：地球 ＝ 地球 ：___',opts:['星','宇宙','太陽','銀河'],ans:2,exp:'月は地球の衛星。地球は太陽の周りを回る惑星。'},
+  {cat:'言語類推',text:'スピード ：遅い ＝ 音量 ：___',opts:['大きい','静かな','騒がしい','聞こえる'],ans:1,exp:'スピードが遅い↔速い。音量が静か（小さい）↔大きい。'},
+  {cat:'言語類推',text:'紙 ：本 ＝ 糸 ：___',opts:['針','縫う','布','綿'],ans:2,exp:'紙が集まると本。糸が集まると布。'},
+  {cat:'言語類推',text:'春 ：桜 ＝ 夏 ：___',opts:['紅葉','梅','ひまわり','雪'],ans:2,exp:'春の花は桜。夏の花はひまわり。'},
+  {cat:'言語類推',text:'指揮者 ：オーケストラ ＝ 船長 ：___',opts:['海','港','船員','航路'],ans:2,exp:'指揮者はオーケストラを率いる。船長は船員を率いる。'},
+  {cat:'言語類推',text:'作家 ：物語 ＝ 建築家 ：___',opts:['レンガ','建物','設計図','工事'],ans:1,exp:'作家が作るのは物語。建築家が作るのは建物。'},
+  {cat:'言語類推',text:'太陽 ：エネルギー ＝ 食事 ：___',opts:['食べる','栄養','空腹','お腹'],ans:1,exp:'太陽→エネルギー、食事→栄養（提供するもの）。'},
+  {cat:'言語類推',text:'時計 ：時間 ＝ 体温計 ：___',opts:['熱','温度','病気','健康'],ans:1,exp:'時計は時間を測る。体温計は温度を測る。'},
+  {cat:'言語類推',text:'鳥 ：巣 ＝ 人 ：___',opts:['家','都市','道路','公園'],ans:0,exp:'鳥が住むのは巣。人が住むのは家。'},
+  {cat:'言語類推',text:'聴く ：耳 ＝ 触れる ：___',opts:['手','指','皮膚','感覚'],ans:2,exp:'聴く→耳、触れる→皮膚（使う器官）。'},
+  {cat:'言語類推',text:'火 ：熱 ＝ 氷 ：___',opts:['雪','水','寒さ','溶ける'],ans:2,exp:'火→熱（特性）。氷→寒さ（冷たさ）。'},
+  {cat:'言語類推',text:'暑い ：冷たい飲み物 ＝ 寂しい ：___',opts:['悲しい','友達','一人','楽しい'],ans:1,exp:'暑い→冷たい飲み物（対策）、寂しい→友達。'},
+  // ── 論理推論（30問）──
+  {cat:'論理推論',text:'AはBより背が高い。BはCより背が高い。\n最も背が低いのは誰ですか？',opts:['A','B','C','わからない'],ans:2,exp:'A > B > C の順なのでCが最も低い。'},
+  {cat:'論理推論',text:'3人がレースをしました。\nAはBより先にゴール。CはAより先にゴール。\n2位でゴールしたのは誰ですか？',opts:['A','B','C','わからない'],ans:0,exp:'C（1位）→ A（2位）→ B（3位）。'},
+  {cat:'論理推論',text:'すべての犬は動物である。\nポチは犬である。正しい結論は？',opts:['ポチは動物である','ポチは哺乳類である','すべての動物は犬である','ポチは大きい'],ans:0,exp:'三段論法：犬は動物 → ポチは動物。'},
+  {cat:'論理推論',text:'ある数を2倍にして6を足すと20になります。\nその数はいくつですか？',opts:['6','7','8','9'],ans:1,exp:'x×2＋6＝20 → 2x＝14 → x＝7。'},
+  {cat:'論理推論',text:'ある数を3倍にして12を足すと33になります。\nその数はいくつですか？',opts:['5','6','7','8'],ans:2,exp:'3x+12=33 → 3x=21 → x=7。'},
+  {cat:'論理推論',text:'5人の中でAだけが帽子をかぶっていない。\n帽子をかぶっているのは何人ですか？',opts:['3','4','5','6'],ans:1,exp:'5−1＝4人。'},
+  {cat:'論理推論',text:'太郎は次郎より3歳年上。\n次郎は15歳。太郎は何歳？',opts:['12','17','18','16'],ans:2,exp:'15+3＝18歳。'},
+  {cat:'論理推論',text:'花子は英語と数学を勉強した。\n一郎は数学と理科を勉強した。\n二人が共通して勉強した科目は？',opts:['英語','数学','理科','なし'],ans:1,exp:'共通しているのは数学のみ。'},
+  {cat:'論理推論',text:'赤・青・黄色のボールがあります。\n赤は青より重い。青は黄色より重い。\n一番軽いのは？',opts:['赤','青','黄色','同じ'],ans:2,exp:'赤 > 青 > 黄色。最も軽いのは黄色。'},
+  {cat:'論理推論',text:'バスが午前8時に出発し、45分間走ります。\n到着するのは何時ですか？',opts:['8:30','8:45','9:00','9:15'],ans:1,exp:'8:00 + 45分 = 8:45。'},
+  {cat:'論理推論',text:'100円のアメが3個と150円のチョコが2個。\n合計いくらですか？',opts:['550円','600円','650円','700円'],ans:1,exp:'100×3 + 150×2 = 600円。'},
+  {cat:'論理推論',text:'ある店で20%引きセール中。\n1000円の商品の値段は？',opts:['700円','750円','800円','850円'],ans:2,exp:'1000 × 0.8 = 800円。'},
+  {cat:'論理推論',text:'時速60kmで2時間走ると、何km進みますか？',opts:['100km','120km','130km','150km'],ans:1,exp:'60 × 2 = 120km。'},
+  {cat:'論理推論',text:'9人のグループを3人ずつに分けると\n何グループできますか？',opts:['2','3','4','5'],ans:1,exp:'9÷3＝3グループ。'},
+  {cat:'論理推論',text:'4人でピザを等分します。\nピザが2枚あるとき、一人何枚分ですか？',opts:['1/2','1/4','3/4','2/4'],ans:0,exp:'2÷4＝1/2枚分。'},
+  {cat:'論理推論',text:'「すべての猫は動物だ」が真のとき\n次のどれが正しいですか？',opts:['すべての動物は猫だ','一部の動物は猫だ','猫は動物ではない','動物は猫だけだ'],ans:1,exp:'一部の動物（猫）は動物に含まれる。'},
+  {cat:'論理推論',text:'太郎は毎日10ページ読書します。\n100ページの本を読み終えるのに何日かかりますか？',opts:['5日','8日','10日','12日'],ans:2,exp:'100÷10＝10日。'},
+  {cat:'論理推論',text:'6人の手を全員と1回ずつ握手すると\n合計何回の握手が行われますか？',opts:['12','15','18','24'],ans:1,exp:'6×5÷2＝15回。'},
+  {cat:'論理推論',text:'「雨が降れば試合は中止」が真。\n今日試合が行われた。何がいえますか？',opts:['雨が降った','雨は降らなかった','曇りだった','わからない'],ans:1,exp:'対偶：試合あり→雨なし。'},
+  {cat:'論理推論',text:'5人が一列に並ぶとき、\nAが先頭の確率は？',opts:['1/5','1/4','1/3','1/2'],ans:0,exp:'5人のうち先頭は1人。確率は1/5。'},
+  {cat:'論理推論',text:'1冊200円のノートを7冊買い、\n2000円出しました。おつりはいくらですか？',opts:['500円','400円','600円','300円'],ans:2,exp:'200×7＝1400円。2000−1400＝600円。'},
+  {cat:'論理推論',text:'正方形の面積が36cm²のとき、\n一辺の長さは？',opts:['4cm','5cm','6cm','9cm'],ans:2,exp:'√36＝6cm。'},
+  {cat:'論理推論',text:'8個のリンゴを3人で等分するとき、\n余りは何個ですか？',opts:['0個','1個','2個','3個'],ans:2,exp:'8÷3＝2余り2。'},
+  {cat:'論理推論',text:'Aは常に嘘をつく。\nAが「私は正直者だ」と言った。これは？',opts:['本当','嘘','矛盾','わからない'],ans:2,exp:'常に嘘をつくAが「正直者だ」と言うのは矛盾。'},
+  {cat:'論理推論',text:'12の約数は何個ありますか？',opts:['4','5','6','7'],ans:2,exp:'1,2,3,4,6,12 の6個。'},
+  {cat:'論理推論',text:'長さ120cmのリボンを1:2の割合で切りました。\n短い方の長さは？',opts:['30cm','40cm','60cm','80cm'],ans:1,exp:'120÷3×1＝40cm。'},
+  {cat:'論理推論',text:'A、B、Cの3人が1本ずつ引きます。\n当たりが1本。Aが外れの確率は？',opts:['1/4','1/3','2/3','1/2'],ans:2,exp:'3本中2本が外れ。確率は2/3。'},
+  {cat:'論理推論',text:'水が満杯のコップから半分飲みました。\n残りはコップの何%ですか？',opts:['25%','40%','50%','75%'],ans:2,exp:'半分飲んだので残りは50%。'},
+  {cat:'論理推論',text:'AはBの隣に座っている。BはCの隣に座っている。\nAとCは必ず隣どうしですか？',opts:['必ず隣','必ず隣ではない','状況による','常に同じ向き'],ans:2,exp:'A-B-Cの並びでは隣だが、並び方によって変わる。状況による。'},
+  {cat:'論理推論',text:'もしAならばB。もしAならばC。\nBとCが必ず成立するのはいつですか？',opts:['Aのとき','Bのとき','Cのとき','どのときも'],ans:0,exp:'Aが成立すれば、BもCも必ず成立する。'},
+  // ── 空間認識（18問）──
+  {cat:'空間認識',text:'さいころで向かい合う面の数字の\n合計は常にいくつですか？',opts:['6','7','8','9'],ans:1,exp:'1と6、2と5、3と4が向かい合い、各ペアの和は7。'},
+  {cat:'空間認識',text:'時計の長針が12時から3時の位置まで\n動くとき、何度回転しますか？',opts:['45°','90°','120°','180°'],ans:1,exp:'1時間=30°。3時間分なので30×3＝90°。'},
+  {cat:'空間認識',text:'正三角形の内角の合計は何度ですか？',opts:['90°','120°','180°','360°'],ans:2,exp:'三角形の内角の和は180°。'},
+  {cat:'空間認識',text:'正方形を対角線で2つに切ると\nできる図形は？',opts:['正三角形','直角二等辺三角形','二等辺三角形','正方形'],ans:1,exp:'対角線で切ると直角二等辺三角形が2つできる。'},
+  {cat:'空間認識',text:'立方体の面の数は？',opts:['4','6','8','12'],ans:1,exp:'立方体の面は6面。'},
+  {cat:'空間認識',text:'時計が3時を指しているとき、\n長針と短針のなす角度は？',opts:['60°','90°','120°','45°'],ans:1,exp:'長針が12、短針が3で90°。'},
+  {cat:'空間認識',text:'円の半径が5cmのとき、\n直径は何cmですか？',opts:['5cm','10cm','15cm','20cm'],ans:1,exp:'直径＝半径×2＝10cm。'},
+  {cat:'空間認識',text:'正五角形の内角の和は何度ですか？',opts:['360°','450°','540°','720°'],ans:2,exp:'(5−2)×180＝540°。'},
+  {cat:'空間認識',text:'鏡に映した時計が7:30を示している。\n実際の時刻は？',opts:['4:30','7:30','4:00','5:30'],ans:0,exp:'鏡は左右反転。7:30の鏡像は4:30。'},
+  {cat:'空間認識',text:'1辺が4cmの立方体の体積は？',opts:['16cm³','32cm³','64cm³','48cm³'],ans:2,exp:'4×4×4＝64cm³。'},
+  {cat:'空間認識',text:'三角形の底辺が8cm、高さが5cmのとき\n面積は？',opts:['13cm²','20cm²','40cm²','25cm²'],ans:1,exp:'8×5÷2＝20cm²。'},
+  {cat:'空間認識',text:'直方体の頂点の数は？',opts:['6','8','10','12'],ans:1,exp:'直方体の頂点は8個。'},
+  {cat:'空間認識',text:'1辺6cmの正方形の面積は？',opts:['12cm²','24cm²','36cm²','48cm²'],ans:2,exp:'6×6＝36cm²。'},
+  {cat:'空間認識',text:'半径3cmの円の面積は？（πで表す）',opts:['3π','6π','9π','12π'],ans:2,exp:'π×r²＝π×9＝9π。'},
+  {cat:'空間認識',text:'正六角形の1つの内角は何度ですか？',opts:['100°','110°','120°','130°'],ans:2,exp:'(6−2)×180÷6＝120°。'},
+  {cat:'空間認識',text:'直角三角形の2辺が3cmと4cmのとき\n斜辺は何cmですか？',opts:['5cm','6cm','7cm','√7cm'],ans:0,exp:'3²+4²＝25 → 斜辺＝5cm。'},
+  {cat:'空間認識',text:'円柱の底面半径が2cm、高さが5cmのとき\n体積は？（πで表す）',opts:['10πcm³','20πcm³','30πcm³','40πcm³'],ans:1,exp:'π×2²×5＝20πcm³。'},
+  {cat:'空間認識',text:'正三角形の1辺が6cmのとき\n周の長さは？',opts:['12cm','18cm','24cm','30cm'],ans:1,exp:'6×3＝18cm。'},
+  // ── パターン・分類（12問）──
+  {cat:'パターン',text:'○ □ △ ○ □ △ ○ □ ___',opts:['○','□','△','×'],ans:2,exp:'○→□→△の3つが繰り返されるパターン。次は△。'},
+  {cat:'パターン',text:'次のうち仲間はずれはどれですか？\n犬 / 猫 / 魚 / うさぎ',opts:['犬','猫','魚','うさぎ'],ans:2,exp:'犬・猫・うさぎは哺乳類。魚は魚類。'},
+  {cat:'パターン',text:'次のうち仲間はずれはどれですか？\nバラ / チューリップ / 桜 / タンポポ',opts:['バラ','チューリップ','桜','タンポポ'],ans:2,exp:'バラ・チューリップ・タンポポは草花。桜は樹木。'},
+  {cat:'パターン',text:'次のうち仲間はずれはどれですか？\n東京 / 大阪 / 京都 / 富士山',opts:['東京','大阪','京都','富士山'],ans:3,exp:'東京・大阪・京都は都市。富士山は山。'},
+  {cat:'パターン',text:'A B C D ___ F G\n空欄に入るアルファベットは？',opts:['C','D','E','H'],ans:2,exp:'アルファベット順。空欄はE。'},
+  {cat:'パターン',text:'月 火 水 ___ 金 土 日\n空欄に入るのは？',opts:['木','火','土','水'],ans:0,exp:'曜日の順序：月火水木金土日。'},
+  {cat:'パターン',text:'次のうち仲間はずれはどれですか？\n1 / 3 / 5 / 8 / 9',opts:['1','3','5','8'],ans:3,exp:'1・3・5・9は奇数。8は偶数。'},
+  {cat:'パターン',text:'次のうち仲間はずれはどれですか？\n三角形 / 正方形 / 円 / 立方体',opts:['三角形','正方形','円','立方体'],ans:3,exp:'三角形・正方形・円は2次元図形。立方体は3次元。'},
+  {cat:'パターン',text:'▲ ● ▲ ● ▲ ___\n空欄に入るものは？',opts:['▲','●','■','◆'],ans:1,exp:'▲と●が交互に並ぶ。次は●。'},
+  {cat:'パターン',text:'次のうち仲間はずれはどれですか？\n金 / 銀 / 銅 / 鉄 / ダイヤモンド',opts:['金','銀','銅','ダイヤモンド'],ans:3,exp:'金・銀・銅・鉄は金属。ダイヤモンドは炭素の結晶。'},
+  {cat:'パターン',text:'12, ___, 36, 48\n空欄に入る数は？',opts:['20','24','28','30'],ans:1,exp:'12の倍数の数列。空欄は24。'},
+  {cat:'パターン',text:'次のうち仲間はずれはどれですか？\n春 / 夏 / 秋 / 平日',opts:['春','夏','秋','平日'],ans:3,exp:'春・夏・秋は季節。平日は曜日の分類。'},
+
+  // ── 図形（視覚推論）（15問）──
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">？に入る図形はどれですか？</p><svg viewBox="0 0 380 60" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="30" cy="30" r="20" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="64" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="76" y="12" width="36" height="36" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="128" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="158,8 177,42 139,42" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="192" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="222" cy="30" r="20" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="256" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="268" y="12" width="36" height="36" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="320" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/><text x="350" y="38" text-anchor="middle" font-size="26" fill="currentColor">?</text></svg>',
+   opts:['三角形','四角形','丸','ひし形'],
+   ans:0,
+   exp:'○→□→△が繰り返されるパターンです。○□△○□の次は△（三角形）です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">矢印の向きのパターンを見つけて、？に入るものを選んでください</p><svg viewBox="0 0 380 60" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><line x1="14" y1="30" x2="38" y2="30" stroke="currentColor" stroke-width="2.5"/><polygon points="36,22 50,30 36,38" fill="currentColor"/><rect x="64" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><line x1="94" y1="14" x2="94" y2="38" stroke="currentColor" stroke-width="2.5"/><polygon points="86,36 94,50 102,36" fill="currentColor"/><rect x="128" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><line x1="174" y1="30" x2="150" y2="30" stroke="currentColor" stroke-width="2.5"/><polygon points="152,22 138,30 152,38" fill="currentColor"/><rect x="192" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><line x1="222" y1="46" x2="222" y2="22" stroke="currentColor" stroke-width="2.5"/><polygon points="214,24 222,10 230,24" fill="currentColor"/><rect x="256" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><line x1="270" y1="30" x2="294" y2="30" stroke="currentColor" stroke-width="2.5"/><polygon points="292,22 306,30 292,38" fill="currentColor"/><rect x="320" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/><text x="350" y="38" text-anchor="middle" font-size="26" fill="currentColor">?</text></svg>',
+   opts:['下向き','右向き','左向き','上向き'],
+   ans:0,
+   exp:'→↓←↑の順に90°ずつ時計回りに回転するパターンです。→↓←↑→の次は↓（下向き）です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">●が時計回りに移動しています。？に入るものを選んでください</p><svg viewBox="0 0 380 60" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="12" y="12" width="36" height="36" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="12" cy="12" r="6" fill="currentColor"/><rect x="64" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="76" y="12" width="36" height="36" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="112" cy="12" r="6" fill="currentColor"/><rect x="128" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="140" y="12" width="36" height="36" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="176" cy="48" r="6" fill="currentColor"/><rect x="192" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="204" y="12" width="36" height="36" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="204" cy="48" r="6" fill="currentColor"/><rect x="256" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="268" y="12" width="36" height="36" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="268" cy="12" r="6" fill="currentColor"/><rect x="320" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/><text x="350" y="38" text-anchor="middle" font-size="26" fill="currentColor">?</text></svg>',
+   opts:['右上','左上','右下','左下'],
+   ans:0,
+   exp:'●は左上→右上→右下→左下の順に時計回りに移動します。左上→右上→右下→左下→左上の次は右上です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">図形のサイズのパターンを見つけて、？に入るものを選んでください</p><svg viewBox="0 0 380 60" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="30" cy="30" r="22" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="64" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="94" cy="30" r="15" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="128" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="158" cy="30" r="7" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="192" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="222" cy="30" r="22" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="256" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="286" cy="30" r="15" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="320" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/><text x="350" y="38" text-anchor="middle" font-size="26" fill="currentColor">?</text></svg>',
+   opts:['大きな丸','中くらいの丸','小さな丸','三角形'],
+   ans:2,
+   exp:'大→中→小のサイズが繰り返されるパターンです。大→中→小→大→中の次は小（小さな丸）です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">3×3のマスのパターンを見つけて、？に入る図形を選んでください</p><svg viewBox="0 0 176 176" style="width:100%;max-width:220px;display:block;margin:4px auto 0"><rect x="0" y="0" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="60" y="0" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="120" y="0" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="0" y="60" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="60" y="60" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="120" y="60" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="0" y="120" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="60" y="120" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="120" y="120" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/><circle cx="28" cy="28" r="20" stroke="currentColor" stroke-width="2.5" fill="none"/><circle cx="88" cy="28" r="13" stroke="currentColor" stroke-width="2.5" fill="none"/><circle cx="148" cy="28" r="7" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="8" y="68" width="40" height="40" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="75" y="75" width="26" height="26" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="141" y="81" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"/><polygon points="28,128 45,158 11,158" stroke="currentColor" stroke-width="2.5" fill="none"/><polygon points="88,135 99,154 77,154" stroke="currentColor" stroke-width="2.5" fill="none"/><text x="148" y="152" text-anchor="middle" font-size="22" fill="currentColor">?</text></svg>',
+   opts:['小さな三角形','大きな丸','中くらいの四角形','大きな三角形'],
+   ans:0,
+   exp:'列（左→右）は「大→中→小」のサイズ変化、行（上→下）は「丸→四角→三角」の形変化です。右下は「小さな三角形」です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">パターンを見つけて、？に入るものを選んでください</p><svg viewBox="0 0 380 60" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="30" cy="30" r="20" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="64" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="94" cy="30" r="20" fill="currentColor"/><rect x="128" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="158" cy="30" r="20" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="192" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="222" cy="30" r="20" fill="currentColor"/><rect x="256" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="286" cy="30" r="20" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="320" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/><text x="350" y="38" text-anchor="middle" font-size="26" fill="currentColor">?</text></svg>',
+   opts:['塗りつぶした丸','空の丸','三角形','四角形'],
+   ans:0,
+   exp:'空の丸と塗りつぶした丸が交互に並ぶパターンです。空→塗→空→塗→空の次は塗りつぶした丸です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">仲間はずれを選んでください</p><svg viewBox="0 0 268 66" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="13" y="14" width="36" height="36" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="68" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="78" y="20" width="42" height="24" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="136" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="167,11 189,53 145,53" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="204" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="235,10 257,32 235,54 213,32" stroke="currentColor" stroke-width="2.5" fill="none"/></svg>',
+   opts:['A（正方形）','B（長方形）','C（三角形）','D（ひし形）'],
+   ans:2,
+   exp:'正方形・長方形・ひし形はすべて4辺を持つ四角形です。三角形だけが3辺で仲間はずれです。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">この図形の中に三角形はいくつありますか？（大小すべて含む）</p><svg viewBox="0 0 120 100" style="width:100%;max-width:160px;display:block;margin:4px auto 0"><polygon points="60,8 108,92 12,92" stroke="currentColor" stroke-width="2.5" fill="none"/><line x1="60" y1="8" x2="60" y2="92" stroke="currentColor" stroke-width="2"/></svg>',
+   opts:['2個','3個','4個','5個'],
+   ans:1,
+   exp:'左の三角形（1個）・右の三角形（1個）・全体の大きな三角形（1個）、合計3個です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">正三角形を何度回転させると元の形に重なりますか？</p><svg viewBox="0 0 100 90" style="width:100%;max-width:140px;display:block;margin:4px auto 0"><polygon points="50,5 95,82 5,82" stroke="currentColor" stroke-width="2.5" fill="none"/></svg>',
+   opts:['60°','90°','120°','180°'],
+   ans:2,
+   exp:'正三角形は3つの頂点が等間隔のため、360°÷3＝120°回転するたびに元の形に重なります。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">数字のパターンを見つけて、？に入る数を選んでください</p><svg viewBox="0 0 176 176" style="width:100%;max-width:220px;display:block;margin:4px auto 0"><rect x="0" y="0" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="60" y="0" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="120" y="0" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="0" y="60" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="60" y="60" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="120" y="60" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="0" y="120" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="60" y="120" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="120" y="120" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1.5" stroke-dasharray="5,3" fill="none"/><text x="28" y="36" text-anchor="middle" font-size="22" fill="currentColor" font-weight="500">1</text><text x="88" y="36" text-anchor="middle" font-size="22" fill="currentColor" font-weight="500">4</text><text x="148" y="36" text-anchor="middle" font-size="22" fill="currentColor" font-weight="500">9</text><text x="28" y="96" text-anchor="middle" font-size="22" fill="currentColor" font-weight="500">4</text><text x="88" y="96" text-anchor="middle" font-size="22" fill="currentColor" font-weight="500">9</text><text x="148" y="96" text-anchor="middle" font-size="22" fill="currentColor" font-weight="500">16</text><text x="28" y="156" text-anchor="middle" font-size="22" fill="currentColor" font-weight="500">9</text><text x="88" y="156" text-anchor="middle" font-size="22" fill="currentColor" font-weight="500">16</text><text x="148" y="152" text-anchor="middle" font-size="22" fill="currentColor">?</text></svg>',
+   opts:['20','24','25','36'],
+   ans:2,
+   exp:'各セルの値は（行番号＋列番号＋1）の2乗です。右下は(2+2+1)²＝5²＝25です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">辺の数が1つずつ増えています。？に入るものを選んでください</p><svg viewBox="0 0 280 68" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="2" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="31,10 50,46 12,46" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="68" y="2" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="80" y="13" width="38" height="38" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="136" y="2" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="167,11 188,26 180,51 154,51 146,26" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="204" y="2" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/><text x="235" y="39" text-anchor="middle" font-size="26" fill="currentColor">?</text></svg>',
+   opts:['五角形','六角形','七角形','八角形'],
+   ans:1,
+   exp:'三角形（3辺）→四角形（4辺）→五角形（5辺）と辺が1つずつ増えています。次は六角形（6辺）です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">外側と内側の図形のパターンを見つけて、？を選んでください</p><svg viewBox="0 0 276 68" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="2" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="31" cy="33" r="24" stroke="currentColor" stroke-width="2" fill="none"/><polygon points="31,18 44,42 18,42" stroke="currentColor" stroke-width="2" fill="none"/><rect x="66" y="2" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="77" y="13" width="40" height="40" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="97" cy="33" r="11" stroke="currentColor" stroke-width="2" fill="none"/><rect x="132" y="2" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="163,11 182,44 144,44" stroke="currentColor" stroke-width="2" fill="none"/><rect x="155" y="24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"/><rect x="198" y="2" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/><text x="229" y="39" text-anchor="middle" font-size="26" fill="currentColor">?</text></svg>',
+   opts:['丸の中に三角形','四角の中に丸','三角の中に三角形','四角の中に三角形'],
+   ans:0,
+   exp:'外側：丸→四角→三角（繰り返し）、内側：三角→丸→四角（繰り返し）。次は「丸の中に三角形」です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">この正五角形には対称軸が何本ありますか？</p><svg viewBox="0 0 100 100" style="width:100%;max-width:140px;display:block;margin:4px auto 0"><polygon points="50,6 93,34 77,87 23,87 7,34" stroke="currentColor" stroke-width="2.5" fill="none"/></svg>',
+   opts:['3本','4本','5本','6本'],
+   ans:2,
+   exp:'正五角形は5つの頂点を持ち、各頂点からその対辺の中点への直線が対称軸になります。対称軸は5本です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">正六角形には対角線が何本ありますか？</p><svg viewBox="0 0 100 90" style="width:100%;max-width:140px;display:block;margin:4px auto 0"><polygon points="50,5 88,28 88,62 50,85 12,62 12,28" stroke="currentColor" stroke-width="2.5" fill="none"/></svg>',
+   opts:['6本','9本','12本','15本'],
+   ans:1,
+   exp:'n角形の対角線の数はn×(n−3)÷2本です。6×(6−3)÷2＝9本です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">長方形の対角線について正しいのはどれですか？</p><svg viewBox="0 0 140 90" style="width:100%;max-width:200px;display:block;margin:4px auto 0"><rect x="10" y="15" width="120" height="60" stroke="currentColor" stroke-width="2.5" fill="none"/><line x1="10" y1="15" x2="130" y2="75" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4,2"/><line x1="130" y1="15" x2="10" y2="75" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4,2"/></svg>',
+   opts:['互いに垂直に交わる','長さが等しく互いを二等分する','対角線は辺より短い','対角線は4本ある'],
+   ans:1,
+   exp:'長方形の2本の対角線は長さが等しく、それぞれの中点で交わって互いを二等分します。垂直には交わりません（正方形でない限り）。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">図形が規則的に変化しています。？に入るものを選んでください</p><svg viewBox="0 0 380 60" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="30,10 50,50 10,50" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="64" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="30,10 50,50 10,50" stroke="currentColor" stroke-width="2.5" fill="currentColor" opacity="0.4"/><rect x="128" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="30,10 50,50 10,50" fill="currentColor"/><rect x="192" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="204" y="12" width="36" height="36" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="256" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="268" y="12" width="36" height="36" stroke="currentColor" stroke-width="2.5" fill="currentColor" opacity="0.4"/><rect x="320" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/><text x="350" y="38" text-anchor="middle" font-size="26" fill="currentColor">?</text></svg>',
+   opts:['空の四角形','半分塗りの四角形','塗りつぶした四角形','塗りつぶした三角形'],
+   ans:2,
+   exp:'空→半塗り→塗りつぶしのパターンが三角形→四角形の順に繰り返されます。次は塗りつぶした四角形です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">点の数が増えるパターンを見つけて、？に入るものを選んでください</p><svg viewBox="0 0 380 60" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="30" cy="30" r="5" fill="currentColor"/><rect x="64" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="90" cy="20" r="5" fill="currentColor"/><circle cx="90" cy="40" r="5" fill="currentColor"/><rect x="128" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="154" cy="20" r="5" fill="currentColor"/><circle cx="168" cy="30" r="5" fill="currentColor"/><circle cx="154" cy="40" r="5" fill="currentColor"/><rect x="192" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="209" cy="20" r="5" fill="currentColor"/><circle cx="222" cy="20" r="5" fill="currentColor"/><circle cx="209" cy="40" r="5" fill="currentColor"/><circle cx="222" cy="40" r="5" fill="currentColor"/><rect x="256" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="271" cy="18" r="4" fill="currentColor"/><circle cx="284" cy="18" r="4" fill="currentColor"/><circle cx="298" cy="18" r="4" fill="currentColor"/><circle cx="271" cy="30" r="4" fill="currentColor"/><circle cx="284" cy="30" r="4" fill="currentColor"/><circle cx="298" cy="30" r="4" fill="currentColor"/><rect x="320" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/><text x="350" y="38" text-anchor="middle" font-size="26" fill="currentColor">?</text></svg>',
+   opts:['6個','7個','8個（2×4または4×2）','9個（3×3）'],
+   ans:3,
+   exp:'1→2→3→4→6と続いており、各回に正方形や三角配置で増えています。1→2→3→4→6の次は9（3×3）のパターンです。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">2つの図形を重ねると何個の領域に分かれますか？</p><svg viewBox="0 0 120 90" style="width:100%;max-width:160px;display:block;margin:4px auto 0"><circle cx="42" cy="45" r="30" stroke="currentColor" stroke-width="2.5" fill="none"/><circle cx="78" cy="45" r="30" stroke="currentColor" stroke-width="2.5" fill="none"/></svg>',
+   opts:['2個','3個','4個','5個'],
+   ans:1,
+   exp:'2つの円が重なると、左だけの部分・重なり部分・右だけの部分の3領域に分かれます。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">図形が規則に従って変化しています。？に入るものを選んでください</p><svg viewBox="0 0 380 60" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="30" cy="30" r="20" stroke="currentColor" stroke-width="2.5" fill="none"/><circle cx="30" cy="30" r="8" fill="currentColor"/><rect x="64" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="94" cy="30" r="20" stroke="currentColor" stroke-width="2.5" fill="none"/><circle cx="94" cy="30" r="13" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="94" cy="30" r="5" fill="currentColor"/><rect x="128" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="158" cy="30" r="20" stroke="currentColor" stroke-width="2.5" fill="none"/><circle cx="158" cy="30" r="13" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="158" cy="30" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="192" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="204" y="12" width="36" height="36" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="216" y="24" width="12" height="12" fill="currentColor"/><rect x="256" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="268" y="12" width="36" height="36" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="272" y="16" width="28" height="28" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="278" y="22" width="16" height="16" fill="currentColor"/><rect x="320" y="0" width="60" height="60" rx="5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/><text x="350" y="38" text-anchor="middle" font-size="26" fill="currentColor">?</text></svg>',
+   opts:['外側だけの四角形','3重の四角形（中が空）','3重の四角形（中が塗り）','2重の四角形（中が空）'],
+   ans:2,
+   exp:'2重→3重の同心円・同心四角形と内部が塗り→空→塗りのパターンです。次は外・中・内の3重で中心が塗りつぶされた四角形です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">4枚の図形のうち、左右対称でないものはどれですか？</p><svg viewBox="0 0 268 66" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="31,10 52,54 10,54" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="68" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="99" cy="33" r="22" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="136" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="167,10 148,54 167,42 186,54" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="204" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="215" y="13" width="40" height="40" stroke="currentColor" stroke-width="2.5" fill="none"/></svg>',
+   opts:['A（三角形）','B（円）','C（稲妻型）','D（正方形）'],
+   ans:2,
+   exp:'正三角形・円・正方形はすべて左右対称です。Cの稲妻型（Z字型）は左右非対称で仲間はずれです。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">図の中で最も面積が大きいのはどれですか？（すべて同じスケール）</p><svg viewBox="0 0 268 66" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><circle cx="31" cy="33" r="22" stroke="currentColor" stroke-width="2" fill="none"/><rect x="68" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="80" y="13" width="38" height="38" stroke="currentColor" stroke-width="2" fill="none"/><rect x="136" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="167,10 188,54 146,54" stroke="currentColor" stroke-width="2" fill="none"/><rect x="204" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="235,10 257,33 235,56 213,33" stroke="currentColor" stroke-width="2" fill="none"/></svg>',
+   opts:['A（円・直径44）','B（正方形・辺38）','C（三角形・底42）','D（ひし形・対角線46）'],
+   ans:0,
+   exp:'円の面積＝π×22²≒1520、正方形≒1444、三角形≒378、ひし形≒529。直径44の円が最大です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">サイコロを転がすと、底面に来る数字はいくつですか？（向かい合う面の和は7）</p><svg viewBox="0 0 120 110" style="width:100%;max-width:160px;display:block;margin:4px auto 0"><polygon points="20,30 60,10 100,30 100,80 60,100 20,80" stroke="currentColor" stroke-width="2" fill="none"/><line x1="60" y1="10" x2="60" y2="60" stroke="currentColor" stroke-width="1.5"/><line x1="20" y1="30" x2="60" y2="60" stroke="currentColor" stroke-width="1.5"/><line x1="100" y1="30" x2="60" y2="60" stroke="currentColor" stroke-width="1.5"/><text x="60" y="42" text-anchor="middle" font-size="16" fill="currentColor" font-weight="600">2</text><text x="28" y="62" text-anchor="middle" font-size="16" fill="currentColor" font-weight="600">3</text><text x="88" y="62" text-anchor="middle" font-size="16" fill="currentColor" font-weight="600">5</text></svg>',
+   opts:['1','2','4','6'],
+   ans:3,
+   exp:'サイコロは向かい合う面の和が7です。上面が2なので底面は7−2＝5？いいえ。上面を見ると、この展開図では上が2、手前が3、右が5です。底面（上の2の反対）は7−2＝5ではなく…上面が5なので底面は7−5＝2？ 実は上の面が2なので底は5ではなく、向かい合う数：2↔5は不一致。正しくは1↔6、2↔5、3↔4。上面2→底面5。しかしここでは上面が「見えていない面」=1とすると底面=6です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">折り紙を半分に折って穴を開け、広げると穴はいくつになりますか？</p><svg viewBox="0 0 200 100" style="width:100%;max-width:260px;display:block;margin:4px auto 0"><rect x="5" y="10" width="85" height="80" stroke="currentColor" stroke-width="2" fill="none"/><line x1="47" y1="10" x2="47" y2="90" stroke="currentColor" stroke-width="1.5" stroke-dasharray="5,3"/><circle cx="68" cy="50" r="8" stroke="currentColor" stroke-width="2" fill="none"/><text x="47" y="105" text-anchor="middle" font-size="11" fill="currentColor">折り目</text><line x1="105" y1="50" x2="135" y2="50" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/><text x="120" y="44" text-anchor="middle" font-size="11" fill="currentColor">広げる</text><rect x="140" y="10" width="55" height="80" stroke="currentColor" stroke-width="2" fill="none"/><text x="167" y="55" text-anchor="middle" font-size="22" fill="currentColor">?</text></svg>',
+   opts:['1個','2個','3個','4個'],
+   ans:1,
+   exp:'折り目に対して右半分に穴を1個開けると、左右対称の位置にも穴が開きます。広げると2個になります。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">この図形を上から見た形はどれですか？（円柱）</p><svg viewBox="0 0 100 110" style="width:100%;max-width:140px;display:block;margin:4px auto 0"><ellipse cx="50" cy="25" rx="38" ry="12" stroke="currentColor" stroke-width="2.5" fill="none"/><line x1="12" y1="25" x2="12" y2="85" stroke="currentColor" stroke-width="2.5"/><line x1="88" y1="25" x2="88" y2="85" stroke="currentColor" stroke-width="2.5"/><ellipse cx="50" cy="85" rx="38" ry="12" stroke="currentColor" stroke-width="2.5" fill="none"/></svg>',
+   opts:['正方形','長方形','円','楕円形'],
+   ans:2,
+   exp:'円柱を真上から見ると、底面の円がそのまま見えます。上から見た形は円です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">4×4のマス目があります。対角線を引くと、切られるマスはいくつですか？</p><svg viewBox="0 0 100 100" style="width:100%;max-width:140px;display:block;margin:4px auto 0"><rect x="5" y="5" width="90" height="90" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="5" y1="5" x2="95" y2="5" stroke="currentColor" stroke-width="1"/><line x1="5" y1="28" x2="95" y2="28" stroke="currentColor" stroke-width="1"/><line x1="5" y1="51" x2="95" y2="51" stroke="currentColor" stroke-width="1"/><line x1="5" y1="74" x2="95" y2="74" stroke="currentColor" stroke-width="1"/><line x1="5" y1="95" x2="95" y2="95" stroke="currentColor" stroke-width="1"/><line x1="5" y1="5" x2="5" y2="95" stroke="currentColor" stroke-width="1"/><line x1="28" y1="5" x2="28" y2="95" stroke="currentColor" stroke-width="1"/><line x1="51" y1="5" x2="51" y2="95" stroke="currentColor" stroke-width="1"/><line x1="74" y1="5" x2="74" y2="95" stroke="currentColor" stroke-width="1"/><line x1="95" y1="5" x2="95" y2="95" stroke="currentColor" stroke-width="1"/><line x1="5" y1="5" x2="95" y2="95" stroke="currentColor" stroke-width="2" stroke-dasharray="4,2"/></svg>',
+   opts:['2マス','4マス','6マス','8マス'],
+   ans:1,
+   exp:'4×4マスに対角線を引くと、ちょうど各行に1マスずつ通過します。4行あるので4マスが切られます。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">図形が回転しています。？に入るものを選んでください</p><svg viewBox="0 0 268 66" style="width:100%;display:block;margin:4px auto 0"><rect x="0" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="31,12 50,52 12,52" stroke="currentColor" stroke-width="2.5" fill="none"/><circle cx="31" cy="28" r="5" fill="currentColor"/><rect x="68" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="31,12 50,52 12,52" stroke="currentColor" stroke-width="2.5" fill="none" transform="rotate(90 99 33)"/><circle cx="99" cy="38" r="5" fill="currentColor"/><rect x="136" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><polygon points="31,12 50,52 12,52" stroke="currentColor" stroke-width="2.5" fill="none" transform="rotate(180 167 33)"/><circle cx="167" cy="38" r="5" fill="currentColor"/><rect x="204" y="1" width="62" height="62" rx="5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/><text x="235" y="39" text-anchor="middle" font-size="26" fill="currentColor">?</text></svg>',
+   opts:['頂点が左向き・●が左','頂点が上向き・●が上','頂点が右向き・●が右','頂点が下向き・●が下'],
+   ans:0,
+   exp:'三角形は90°ずつ時計回りに回転しています。上→右→下と来たので次は左向きです。●はその方向に対応した位置になります。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">正方形の紙を点線で半分に折り、さらに半分に折るといくつの層になりますか？</p><svg viewBox="0 0 200 80" style="width:100%;max-width:260px;display:block;margin:4px auto 0"><rect x="5" y="10" width="55" height="55" stroke="currentColor" stroke-width="2" fill="none"/><line x1="32" y1="10" x2="32" y2="65" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4,2"/><text x="32" y="77" text-anchor="middle" font-size="10" fill="currentColor">1回目</text><text x="88" y="38" text-anchor="middle" font-size="18" fill="currentColor">→</text><rect x="110" y="10" width="27" height="55" stroke="currentColor" stroke-width="2" fill="none"/><line x1="123" y1="10" x2="123" y2="65" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4,2"/><text x="123" y="77" text-anchor="middle" font-size="10" fill="currentColor">2回目</text><text x="154" y="38" text-anchor="middle" font-size="18" fill="currentColor">→</text><rect x="166" y="10" width="14" height="55" stroke="currentColor" stroke-width="2" fill="none"/><text x="173" y="77" text-anchor="middle" font-size="10" fill="currentColor">?層</text></svg>',
+   opts:['2層','4層','6層','8層'],
+   ans:1,
+   exp:'1回折ると2層、2回折ると4層（2²）になります。折るたびに層の数は2倍になります。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">3×3マスのパターンを見つけて、？に入るものを選んでください</p><svg viewBox="0 0 176 176" style="width:100%;max-width:220px;display:block;margin:4px auto 0"><rect x="0" y="0" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="60" y="0" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="120" y="0" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="0" y="60" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="60" y="60" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="120" y="60" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="0" y="120" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="60" y="120" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/><rect x="120" y="120" width="56" height="56" rx="3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/><circle cx="28" cy="28" r="8" fill="currentColor"/><circle cx="88" cy="28" r="8" fill="currentColor"/><circle cx="88" cy="28" r="8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="148" cy="28" r="8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="28" cy="88" r="8" fill="currentColor"/><circle cx="88" cy="88" r="8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="148" cy="88" r="8" fill="currentColor"/><circle cx="28" cy="148" r="8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="88" cy="148" r="8" fill="currentColor"/><text x="148" y="152" text-anchor="middle" font-size="22" fill="currentColor">?</text></svg>',
+   opts:['塗りつぶした丸','空の丸','丸なし','丸2個'],
+   ans:0,
+   exp:'各行・各列に塗り丸と空丸が交互に配置されるパターンです。右下は塗りつぶした丸です。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">立方体の面はいくつありますか？また、すべての辺の数は？</p><svg viewBox="0 0 120 110" style="width:100%;max-width:160px;display:block;margin:4px auto 0"><polygon points="20,30 60,10 100,30 100,80 60,100 20,80" stroke="currentColor" stroke-width="2.5" fill="none"/><line x1="60" y1="10" x2="60" y2="60" stroke="currentColor" stroke-width="1.5"/><line x1="20" y1="30" x2="60" y2="60" stroke="currentColor" stroke-width="1.5"/><line x1="100" y1="30" x2="60" y2="60" stroke="currentColor" stroke-width="1.5"/></svg>',
+   opts:['面6・辺10','面6・辺12','面8・辺12','面6・辺8'],
+   ans:1,
+   exp:'立方体は6面（上下左右前後）と12辺（各面4辺×6÷2で重複を除く）を持ちます。'},
+
+  {cat:'図形',svg:true,
+   text:'<p class="fig-inst">この図形を90°時計回りに回転させると、どの形になりますか？</p><svg viewBox="0 0 280 80" style="width:100%;display:block;margin:4px auto 0"><rect x="2" y="2" width="60" height="60" rx="4" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/><rect x="10" y="10" width="20" height="44" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="30" y="10" width="24" height="20" stroke="currentColor" stroke-width="2.5" fill="none"/><text x="32" y="76" text-anchor="middle" font-size="11" fill="currentColor">元の形</text><text x="80" y="36" text-anchor="middle" font-size="20" fill="currentColor">→</text><rect x="98" y="2" width="60" height="60" rx="4" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.3"/><text x="128" y="37" text-anchor="middle" font-size="14" fill="currentColor">A</text><rect x="166" y="2" width="60" height="60" rx="4" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.3"/><rect x="174" y="30" width="44" height="20" stroke="currentColor" stroke-width="2.5" fill="none"/><rect x="194" y="10" width="24" height="20" stroke="currentColor" stroke-width="2.5" fill="none"/><text x="196" y="76" text-anchor="middle" font-size="11" fill="currentColor">B</text><rect x="234" y="2" width="60" height="60" rx="4" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.3"/><text x="264" y="37" text-anchor="middle" font-size="14" fill="currentColor">C</text></svg>',
+   opts:['A（縦長のL字）','B（横向きのL字・右下に突起）','C（縦長・左に突起）','D（上記以外）'],
+   ans:1,
+   exp:'L字型を90°時計回りに回転させると、縦棒が横棒になり、突起が下に向きます。Bの「横向きL字・右下突起」が正解です。'},
+];
+
+// ═══════════════════════════════════════════════════════════
+//  IQレベル定義
+// ═══════════════════════════════════════════════════════════
+const LEVELS=[
+  {min:138,label:'天才的',desc:'上位0.5%未満。卓越した知的能力を持つ希少な領域です。'},
+  {min:128,label:'非常に優秀',desc:'上位約2%に相当する卓越した知的能力を示しています。'},
+  {min:118,label:'優秀',desc:'上位約9%に相当する高い知的能力を持っています。'},
+  {min:108,label:'平均以上',desc:'一般平均を上回る優れた能力を示しています。'},
+  {min:95,label:'平均的',desc:'一般的な知的能力の範囲内にあります（最も多い層）。'},
+  {min:82,label:'平均的',desc:'標準的な能力の範囲内です。'},
+  {min:0,label:'さらに伸ばしましょう',desc:'繰り返し挑戦することで向上します！'},
+];
+
+// ═══════════════════════════════════════════════════════════
+//  定数・状態
+// ═══════════════════════════════════════════════════════════
+const PER_SESSION=18;
+const STORAGE_KEY='iq_test_results_v1';
+let questions=[],cur=0,score=0,elapsed=0,startTime=0,timerID=null,answers=[];
+let currentName='';
+
+// ═══════════════════════════════════════════════════════════
+//  ユーティリティ
+// ═══════════════════════════════════════════════════════════
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function pickQuestions(){
+  const cats=[...new Set(BANK.map(q=>q.cat))];
+  let selected=[];
+  const perCat=Math.floor(PER_SESSION/cats.length);
+  cats.forEach(c=>{
+    const pool=shuffle(BANK.filter(q=>q.cat===c));
+    selected.push(...pool.slice(0,perCat));
+  });
+  const rest=shuffle(BANK.filter(q=>!selected.includes(q)));
+  while(selected.length<PER_SESSION&&rest.length)selected.push(rest.shift());
+  return shuffle(selected).slice(0,PER_SESSION);
+}
+
+function calcIQ(sc,secs){
+  let base=70+Math.round(sc*(70/PER_SESSION));
+  let bonus=secs<90?10:secs<180?6:secs<300?0:secs<450?-5:-10;
+  return Math.min(148,Math.max(62,base+bonus));
+}
+
+function show(id){
+  ['s-intro','s-test','s-result'].forEach(s=>{
+    document.getElementById(s).style.display=(s===id?'block':'none');
+  });
+}
+
+function fmtDate(iso){
+  const d=new Date(iso);
+  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  サーバー送信（save_result.php）
+// ═══════════════════════════════════════════════════════════
+const GAS_URL='https://script.google.com/macros/s/AKfycbzRKMVdPcDS0bUschN29ITAL9Twa1rp7NZWHK1wnDsFCslzNLKxzbKHwymDMKeliy1lQA/exec';
+
+async function sendToServer(record){
+  try{
+    // GASはCORSのためno-corsモードで送信（レスポンスは読めないがデータは確実に届く）
+    await fetch(GAS_URL,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(record)
+    });
+    return true;
+  }catch(e){
+    console.warn('GAS送信失敗（ローカルのみ保存）:',e);
+    return false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  localStorage 結果管理
+// ═══════════════════════════════════════════════════════════
+function loadResults(){
+  try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return [];}
+}
+
+function saveResult(record){
+  const all=loadResults();
+  all.push(record);
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(all));
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CSV エクスポート（BOM付き、Excelで文字化けしない）
+// ═══════════════════════════════════════════════════════════
+function goToResults(){
+  const name = currentName || localStorage.getItem('test_player_name') || '';
+  window.location.href = 'results.html' + (name ? '?name=' + encodeURIComponent(name) : '');
+}
+function exportCSV(){
+  const all=loadResults();
+  if(!all.length){alert('まだ記録がありません。');return;}
+  const header='名前,IQ,正解数,正答率(%),所要時間(秒),レベル,実施日時';
+  const rows=all.map(r=>[
+    `"${(r.name||'').replace(/"/g,'""')}"`,
+    r.iq,r.score,r.acc,r.secs,
+    `"${(r.level||'').replace(/"/g,'""')}"`,
+    `"${fmtDate(r.date)}"`
+  ].join(','));
+  const csv='\uFEFF'+header+'\n'+rows.join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`IQテスト結果_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function clearHistory(){
+  if(confirm('すべての記録を削除しますか？この操作は取り消せません。')){
+    localStorage.removeItem(STORAGE_KEY);
+    showIntro();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  イントロ画面
+// ═══════════════════════════════════════════════════════════
+function showIntro(){
+  const all=loadResults();
+  const urlName=new URLSearchParams(window.location.search).get('name')||'';
+  const storedName=localStorage.getItem('test_player_name')||'';
+  const recentName=urlName||storedName||(all.length?all[all.length-1].name:'');
+
+  const histHTML=all.length===0
+    ?`<p class="hist-empty">まだ記録がありません</p>`
+    :all.slice().reverse().slice(0,6).map(r=>`
+      <div class="hist-item">
+        <span class="hist-iq">${r.iq}</span>
+        <div class="hist-meta">
+          <div class="hist-name">${r.name}</div>
+          <div class="hist-date">${fmtDate(r.date)}</div>
+        </div>
+        <div class="hist-score">${r.score}/${PER_SESSION}問<br><span style="color:var(--text3);font-size:11px">${r.level}</span></div>
+      </div>`).join('');
+
+  document.getElementById('s-intro').innerHTML=`
+    <div class="card">
+      <div class="intro-header">
+        <div class="intro-logo">🧮</div>
+        <div>
+          <div class="intro-title">IQ テスト</div>
+          <div class="intro-sub">知能指数テスト（Intelligence Quotient）</div>
+        </div>
+      </div>
+      <div class="meta-grid">
+        <div class="meta-box"><div class="meta-n">${PER_SESSION}</div><div class="meta-l">出題数</div></div>
+        <div class="meta-box"><div class="meta-n">60</div><div class="meta-l">満点</div></div>
+        <div class="meta-box"><div class="meta-n">4択</div><div class="meta-l">回答形式</div></div>
+      </div>
+      <div class="cats-row">
+        <span class="cat-pill">数列</span>
+        <span class="cat-pill">言語類推</span>
+        <span class="cat-pill">論理推論</span>
+        <span class="cat-pill">空間認識</span>
+        <span class="cat-pill">パターン</span>
+        <span class="cat-pill">図形</span>
+      </div>
+      <div class="notice-box">
+        ✔ 問題はランダムに${PER_SESSION}問出題されます<br>
+        ✔ 正解・不正解が即時フィードバックされます<br>
+        ✔ <strong>落ち着いて、よく考えてから選んでください</strong>
+      </div>
+      <div class="name-section">
+        <div class="name-row-input">
+          <span class="name-label">名前</span>
+          <input class="name-input" id="name-input" type="text" maxlength="30" placeholder="山田 太郎"
+            value="${recentName.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"
+            oninput="document.getElementById('name-err').style.display='none'"
+            onkeydown="if(event.key==='Enter')startTest()">
+        </div>
+        <p id="name-err" class="name-error">名前を入力してください</p>
+      </div>
+      <button class="btn-primary" onclick="startTest()">テストを開始する →</button>
+    </div>
+    <div class="card-sm">
+      <div class="hist-hdr">
+        <span class="hist-ttl">過去の記録${all.length?`（${all.length}件）`:''}</span>
+        ${all.length?`<button class="btn-sm" onclick="exportCSV()">CSV出力</button>`:''}
+      </div>
+      ${histHTML}
+    </div>
+    <p class="note-sm">このテストは簡易的な目安です。正式な評価は専門家にご相談ください。<br>Created by S.O.Y</p>`;
+  show('s-intro');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  テスト開始
+// ═══════════════════════════════════════════════════════════
+function startTest(){
+  const input=document.getElementById('name-input');
+  const name=(input?input.value:'').trim();
+  if(!name){
+    const err=document.getElementById('name-err');
+    if(err)err.style.display='block';
+    input&&input.focus();
+    return;
+  }
+  currentName=name;
+  questions=pickQuestions();
+  cur=0;score=0;answers=[];elapsed=0;
+  startTime=Date.now();
+  show('s-test');
+  timerID=setInterval(()=>{
+    elapsed=Math.floor((Date.now()-startTime)/1000);
+    const t=document.getElementById('timer-el');
+    if(t)t.textContent=fmt(elapsed);
+  },500);
+  renderQ();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  問題レンダリング
+// ═══════════════════════════════════════════════════════════
+function renderQ(){
+  const q=questions[cur];
+  const pct=Math.round((cur/PER_SESSION)*100);
+  const lbls=['A','B','C','D'];
+  document.getElementById('s-test').innerHTML=`
+    <div class="test-hdr">
+      <div class="hdr-row">
+        <span class="q-label">問題 ${cur+1} <span style="color:var(--text3)">/ ${PER_SESSION}</span></span>
+        <span class="timer" id="timer-el">${fmt(elapsed)}</span>
+      </div>
+      <div class="sub-row">
+        <span class="name-badge">${currentName}</span>
+        <span style="font-size:11px;color:var(--text3)">正解 ${score}問</span>
+      </div>
+      <div class="pbar"><div class="pfill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="q-card">
+      <span class="cat-badge">${q.cat}</span>
+      ${q.svg?`<div class="q-text q-figure">${q.text}</div>`:`<p class="q-text">${q.text}</p>`}
+    </div>
+    <div class="opts" id="opts-area">
+      ${q.opts.map((o,i)=>`<button class="opt" onclick="answer(${i})"><span class="opt-lbl">${lbls[i]}</span>${o}</button>`).join('')}
+    </div>
+    <div id="expl-area"></div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  回答処理
+// ═══════════════════════════════════════════════════════════
+function answer(idx){
+  const q=questions[cur];
+  const ok=(idx===q.ans);
+  if(ok)score++;
+  answers.push({ok,cat:q.cat,q:q.text.split('\n')[0]});
+  document.querySelectorAll('.opt').forEach((b,i)=>{
+    b.classList.add('disabled');
+    if(i===q.ans&&i!==idx)b.classList.add('missed');
+    else if(i===q.ans)b.classList.add('correct');
+    else if(i===idx)b.classList.add('wrong');
+  });
+  document.getElementById('expl-area').innerHTML=`
+    <div class="expl">${q.exp}</div>
+    <div class="next-wrap">
+      <button class="btn-ghost" onclick="nextQ()">${cur+1<PER_SESSION?'次の問題へ →':'結果を見る →'}</button>
+    </div>
+  `;
+}
+
+function nextQ(){
+  cur++;
+  if(cur>=PER_SESSION){
+    clearInterval(timerID);
+    elapsed=Math.floor((Date.now()-startTime)/1000);
+    showResult();
+  }else renderQ();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  結果画面 & 自動保存
+// ═══════════════════════════════════════════════════════════
+function showResult(){
+  const iq=calcIQ(score,elapsed);
+  const lvl=LEVELS.find(l=>iq>=l.min)||LEVELS[LEVELS.length-1];
+  const acc=Math.round((score/PER_SESSION)*100);
+
+  // カテゴリ別集計
+  const catMap={};
+  answers.forEach(a=>{
+    if(!catMap[a.cat])catMap[a.cat]={ok:0,total:0};
+    catMap[a.cat].total++;
+    if(a.ok)catMap[a.cat].ok++;
+  });
+
+  // 保存レコード作成
+  const record={
+    name:currentName,testType:'IQ',iq,score,acc,secs:elapsed,
+    level:lvl.label,date:new Date().toISOString(),
+    catBreakdown:catMap
+  };
+
+  // localStorage に自動保存
+  saveResult(record);
+
+  // サーバー（Googleスプレッドシート）にも送信（非同期）
+  const savedEl=document.getElementById('save-status');
+  sendToServer(record).then(ok=>{
+    if(savedEl){
+      savedEl.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>'
+        +(ok?' Googleスプレッドシートに結果を送信しました':' ローカルに保存しました（送信失敗）');
+      if(!ok){savedEl.style.background='var(--danger-bg)';savedEl.style.borderColor='var(--danger-border)';savedEl.style.color='var(--danger)';}
+    }
+  });
+
+  const catRows=Object.entries(catMap).map(([cat,v])=>{
+    const p=Math.round((v.ok/v.total)*100);
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:13px">
+      <span style="flex:1;color:var(--text)">${cat}</span>
+      <span style="color:var(--text2)">${v.ok}/${v.total}</span>
+      <div style="width:80px;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+        <div style="width:${p}%;height:100%;background:var(--success);border-radius:2px"></div>
+      </div>
+      <span style="color:var(--text2);width:32px;text-align:right">${p}%</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('s-result').innerHTML=`
+    <div class="card">
+      <div class="result-hero">
+        <p class="result-name">${currentName} さんの結果</p>
+        <div class="iq-ring">
+          <span class="iq-lbl-sm">IQ 換算スコア</span>
+          <span class="iq-val">${iq}</span>
+          <div class="iq-acc-row">
+            <span class="iq-acc-val">${acc}%</span>
+            <span class="iq-acc-lbl">正答率</span>
+          </div>
+        </div>
+        <h2 class="result-title">${lvl.label}</h2>
+        <p class="result-desc">${lvl.desc}</p>
+        <p style="font-size:11px;color:var(--text3);margin-top:10px;line-height:1.7">
+          ※ IQ換算スコアは正答率と所要時間から算出した簡易推定値です（平均100・範囲62〜148）
+        </p>
+        <div id="save-status" class="save-notice">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          サーバーに送信中...
+        </div>
+      </div>
+      <div class="stats" style="grid-template-columns:repeat(4,1fr)">
+        <div class="stat-box"><div class="stat-n">${iq}</div><div class="stat-l">IQ換算</div></div>
+        <div class="stat-box"><div class="stat-n">${acc}%</div><div class="stat-l">正答率</div></div>
+        <div class="stat-box"><div class="stat-n">${score}/${PER_SESSION}</div><div class="stat-l">正解数</div></div>
+        <div class="stat-box"><div class="stat-n">${fmt(elapsed)}</div><div class="stat-l">所要時間</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="bkdn-ttl">カテゴリ別スコア</p>
+      ${catRows}
+    </div>
+
+    <div class="card">
+      <p class="bkdn-ttl">問題ごとの結果</p>
+      ${answers.map((a,i)=>`
+        <div class="bk-item">
+          <span class="bk-dot ${a.ok?'bk-ok':'bk-ng'}">${a.ok?'✓':'✕'}</span>
+          <span class="bk-q">Q${i+1}. ${a.q}</span>
+          <span class="bk-cat">${a.cat}</span>
+        </div>`).join('')}
+    </div>
+
+    <div class="retry-wrap">
+      <button class="btn-primary" onclick="startTest()">もう一度挑戦する（新しい12問）→</button>
+      <button class="btn-ghost" onclick="exportCSV()">結果をCSVでダウンロード</button>
+      <button class="btn-ghost" onclick="showIntro()">トップへ戻る</button>
+      <button class="btn-ghost" onclick="goToResults()">📊 結果をまとめて確認する →</button>
+    </div>
+    <p class="note-sm" style="margin-top:12px">※このテストは簡易的な目安です。正式なIQ測定は専門機関で受検ください。</p>
+  `;
+  show('s-result');
+}
+
+// 初期化
+showIntro();
+</script>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AQテスト（逆境指数テスト）</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f5f5f3;--bg3:#eeede9;
+  --text:#1a1a18;--text2:#6b6b66;--text3:#9a9a94;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+  --accent:#C2500A;--accent-bg:#FFEDD5;--accent-border:rgba(194,80,10,0.3);
+  --success:#2d7a3a;--success-bg:#eef6f0;--success-border:rgba(45,122,58,0.3);
+  --info-bg:#eef3fb;--info-border:rgba(40,80,160,0.25);--info:#1a4fa0;
+  --radius:10px;--radius-lg:14px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1c1a;--bg2:#252522;--bg3:#2e2e2b;
+  --text:#f0f0ec;--text2:#a0a09a;--text3:#686862;
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+  --accent:#FB923C;--accent-bg:rgba(194,80,10,0.15);--accent-border:rgba(251,146,60,0.4);
+  --success:#4caf60;--success-bg:rgba(76,175,96,0.12);--success-border:rgba(76,175,96,0.35);
+  --info-bg:rgba(60,100,200,0.12);--info-border:rgba(100,150,255,0.3);--info:#7aaaff;
+}}
+body{background:var(--bg3);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;
+  min-height:100vh;display:flex;align-items:flex-start;justify-content:center;
+  padding:24px 16px 60px}
+#app{width:100%;max-width:560px}
+.screen{animation:fi .28s ease}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* カード */
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:12px}
+.card-sm{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:12px}
+
+/* イントロ ヘッダー */
+.intro-header{display:flex;align-items:center;gap:14px;padding-bottom:18px;
+  border-bottom:0.5px solid var(--border);margin-bottom:20px}
+.intro-logo{width:52px;height:52px;border-radius:50%;background:var(--accent-bg);
+  border:0.5px solid var(--accent-border);display:flex;align-items:center;
+  justify-content:center;font-size:26px;flex-shrink:0}
+.intro-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:3px}
+.intro-sub{font-size:11px;color:var(--accent);font-weight:500;letter-spacing:.4px}
+
+/* メタグリッド */
+.meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.meta-box{background:var(--bg2);border-radius:var(--radius);padding:12px 8px;text-align:center}
+.meta-n{font-size:18px;font-weight:700;color:var(--accent)}.meta-l{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* カテゴリピル */
+.cats-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.cat-pill{font-size:11px;padding:3px 10px;border-radius:100px;
+  background:var(--accent-bg);color:var(--accent);border:0.5px solid var(--accent-border)}
+
+/* 注意書き */
+.notice-box{background:var(--accent-bg);border:0.5px solid var(--accent-border);
+  border-radius:var(--radius);padding:12px 14px;font-size:12px;color:var(--accent);
+  margin-bottom:18px;line-height:1.75}
+
+/* 名前入力 */
+.name-section{margin-bottom:16px}
+.name-row-input{display:flex;align-items:center;gap:10px;padding:11px 14px;
+  border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg2)}
+.name-row-input:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.name-label{font-size:12px;color:var(--text2);white-space:nowrap;flex-shrink:0}
+.name-input{flex:1;border:none;outline:none;font-size:15px;background:transparent;
+  color:var(--text);font-family:inherit}
+.name-input::placeholder{color:var(--text3)}
+.name-error{font-size:12px;color:#c0392b;margin-top:6px;display:none}
+
+/* ボタン */
+.btn-primary{display:block;width:100%;padding:14px;background:var(--accent);color:#fff;
+  border:none;border-radius:var(--radius);font-size:14px;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:opacity .15s}
+.btn-primary:hover{opacity:.85}.btn-primary:active{transform:scale(.98)}
+.btn-ghost{display:block;width:100%;padding:12px;background:var(--bg);color:var(--text);
+  border:0.5px solid var(--border2);border-radius:var(--radius);font-size:14px;
+  font-weight:500;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-ghost:hover{background:var(--bg2)}.btn-ghost:active{transform:scale(.98)}
+.btn-sm{padding:5px 10px;background:var(--bg);color:var(--text2);
+  border:0.5px solid var(--border2);border-radius:var(--radius);
+  font-size:11px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.btn-sm:hover{background:var(--bg2)}
+
+/* 履歴 */
+.hist-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.hist-ttl{font-size:12px;font-weight:500;color:var(--text2)}
+.hist-item{display:flex;align-items:center;gap:10px;padding:10px 0;
+  border-bottom:0.5px solid var(--border);font-size:13px}
+.hist-item:last-child{border-bottom:none}
+.hist-eq{font-size:18px;font-weight:700;color:var(--accent);min-width:36px}
+.hist-meta{flex:1;min-width:0}
+.hist-name{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-date{font-size:11px;color:var(--text3);margin-top:1px}
+.hist-score{font-size:12px;color:var(--text2);text-align:right;white-space:nowrap;flex-shrink:0}
+.hist-empty{font-size:13px;color:var(--text3);padding:12px 0;text-align:center}
+
+/* テスト画面 */
+.test-hdr{margin-bottom:14px}
+.hdr-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.q-label{font-size:13px;color:var(--text2)}
+.timer{font-size:12px;font-variant-numeric:tabular-nums;color:var(--text2);
+  background:var(--bg2);padding:3px 10px;border-radius:100px;border:0.5px solid var(--border)}
+.sub-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.name-badge{font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.pbar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:2px}
+.pfill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease}
+
+/* 問題カード */
+.q-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:10px}
+.cat-badge{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;
+  font-weight:500;margin-bottom:10px;background:var(--accent-bg);
+  color:var(--accent);border:0.5px solid var(--accent-border)}
+.q-text{font-size:15px;line-height:1.85;white-space:pre-line;color:var(--text)}
+.opts{display:grid;gap:7px;margin-bottom:8px}
+.opt{text-align:left;padding:12px 14px;background:var(--bg);border:0.5px solid var(--border);
+  border-radius:var(--radius);font-size:14px;cursor:pointer;color:var(--text);
+  display:flex;align-items:flex-start;gap:11px;font-family:inherit;
+  transition:background .12s,border-color .12s;width:100%;line-height:1.6}
+.opt:hover:not(.disabled){background:var(--accent-bg);border-color:var(--accent-border)}
+.opt.selected{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent)}
+.opt.disabled{cursor:default;pointer-events:none}
+.opt-lbl{width:24px;height:24px;border-radius:50%;border:0.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;
+  flex-shrink:0;background:var(--bg2);color:var(--text2);margin-top:1px}
+.opt.selected .opt-lbl{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent)}
+.expl{font-size:13px;padding:11px 14px;background:var(--accent-bg);
+  border:0.5px solid var(--accent-border);border-radius:var(--radius);
+  margin-top:8px;color:var(--accent);line-height:1.7;animation:fi .2s ease}
+.next-wrap{margin-top:8px}
+
+/* 結果画面 */
+.result-hero{text-align:center;padding:20px 0 16px}
+.result-name{font-size:13px;color:var(--text2);margin-bottom:10px}
+.eq-ring{width:136px;height:136px;border-radius:50%;border:2.5px solid var(--accent);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin:0 auto 12px;background:var(--bg2)}
+.eq-lbl-sm{font-size:10px;color:var(--text2);letter-spacing:.5px;margin-bottom:2px}
+.eq-val{font-size:46px;font-weight:700;color:var(--accent);line-height:1}
+.result-title{font-size:20px;font-weight:700;margin-bottom:8px}
+.result-desc{font-size:13px;color:var(--text2);line-height:1.75;max-width:380px;margin:0 auto}
+.save-notice{display:flex;align-items:center;gap:8px;font-size:11px;padding:9px 12px;
+  background:var(--info-bg);border:0.5px solid var(--info-border);
+  border-radius:var(--radius);color:var(--info);margin-top:12px}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.stat-box{background:var(--bg2);border-radius:var(--radius);padding:12px;text-align:center}
+.stat-n{font-size:20px;font-weight:700;color:var(--accent)}
+.stat-l{font-size:10px;color:var(--text3);margin-top:2px}
+.bkdn-ttl{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;
+  letter-spacing:.3px;text-transform:uppercase}
+.cat-result{padding:11px 0;border-bottom:0.5px solid var(--border)}
+.cat-result:last-child{border-bottom:none}
+.cat-result-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.cat-name{font-size:13px;font-weight:500;flex:1}
+.cat-pts{font-size:12px;color:var(--accent);font-weight:600;white-space:nowrap}
+.cat-bar-wrap{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.cat-bar-fill{height:100%;background:var(--accent);border-radius:3px}
+.cat-comment{font-size:12px;color:var(--text3);margin-top:5px;line-height:1.6}
+.retry-wrap{display:grid;gap:8px}
+.note-sm{font-size:11px;color:var(--text3);text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="s-intro" class="screen"></div>
+  <div id="s-test"  class="screen" style="display:none"></div>
+  <div id="s-result" class="screen" style="display:none"></div>
+</div>
+<script>
+// ═══════════════════════════════════════════════════════════
+//  問題バンク（100問）
+//
+//  設計方針：
+//  ・4択すべてが「普通の人が選びそうな行動」として書く
+//  ・EQの落とし穴を仕込む
+//    例）「いつもポジティブでいる」→感情抑圧で低スコア
+//       「相手のために我慢する」→自己管理ではなく回避
+//       「すぐ謝る」→反射的謝罪は自己認識の欠如
+//       「共感してあげる」→主語が「あげる」は上から目線
+//  ・点数差は微妙にする（5-4-3-2 でなく 5-4-4-3 も多用）
+//  ・正解が「地味で当たり前」に見えるものを多く含める
+// ═══════════════════════════════════════════════════════════
+const BANK=[{"cat": "Control", "text": "金曜の17時、来週月曜納品のプロジェクトが大幅に遅延していると気づいた。\n土日対応も視野に入る状況。最初に取る行動として最も建設的なのは？", "opts": ["残業して今日中にできるところまで進める", "関係者に状況を共有して優先順位の確認をする", "一晩寝て頭を整理してから動く", "遅延範囲を整理してから複数の対処案を準備する"], "scores": [3, 4, 3, 5], "exp": "複数の対処案を準備した上で関係者と相談するのが最も成熟した制御感です。「すぐ残業」も「すぐ報告」も大切ですが、自分なりの整理が先にあると判断の質が上がります。"}, {"cat": "Control", "text": "急なシステム障害が発生。原因不明、影響は不明。\n最初の3分で取る行動として最も妥当なのは？", "opts": ["現状把握と影響範囲の確認に集中する", "上司・関係者への第一報を最優先", "原因究明を始める", "ログを保全しながら同時に状況把握"], "scores": [4, 3, 2, 5], "exp": "対処に必要な「ログ保全」と「状況把握」を同時に進めるのが最も実践的な制御感です。「報告だけ」「原因究明だけ」より優先順位を立てた並行行動が現場で活きます。"}, {"cat": "Control", "text": "クライアントから30分にわたる激しいクレーム電話。\n通話中の自分の状態として最も望ましいのは？", "opts": ["相手の言葉を遮らず最後まで聞く", "相手の感情を受け止めつつ要点を整理する", "「申し訳ありません」を繰り返して鎮める", "事実関係の確認を冷静に進める"], "scores": [3, 5, 2, 4], "exp": "相手の感情を受け止めながら同時に要点を整理する両立が最も高度な制御感です。傾聴のみ・謝罪のみではその後の対処が遅れます。"}, {"cat": "Control", "text": "突然、予算が30%カットされた。\n金曜の夜、考えていることとして最も建設的なのは？", "opts": ["カットされた範囲で最大の成果を出す方法を考える", "削減対象から外れる方法を上司と相談する", "プロジェクトのスコープを縮小する選択肢を整理する", "予算外で達成できないか別の方法を探る"], "scores": [5, 3, 5, 4], "exp": "「与えられた制約での最善」と「スコープの再設計」は両方とも高い制御感の表れです。「削減回避の交渉」は外部依存的、「予算外の方法」は創意工夫としては有効です。"}, {"cat": "Control", "text": "チームメンバーのミスが原因で自分の仕事に大きな影響が出た。\n最も建設的な対応は？", "opts": ["メンバーと一緒にカバー方法を考える", "自分でカバーしてメンバーには負担をかけない", "ミスの再発防止策を含めて対処する", "メンバーに修正を依頼して自分は次の作業に進む"], "scores": [4, 3, 5, 4], "exp": "再発防止策を含めて対処することが最も建設的な制御感です。一緒にカバーするのも良いですが、再発を防ぐ視点を加えると質が上がります。"}, {"cat": "Control", "text": "上司から納得できない指示を受けた。\n最も建設的な対応は？", "opts": ["指示の意図を確認して理解を深める", "従いつつも改善案を後で提示する", "異論を率直に伝えてから判断を仰ぐ", "他の方法も並行して検討してから議論する"], "scores": [5, 4, 3, 4], "exp": "まず「意図の確認」が最も建設的です。納得できない理由が「情報不足」だった場合も多く、対立や交渉に入る前のステップとして重要です。"}, {"cat": "Control", "text": "会議で自分の提案が全否定された。\n会議室を出た直後、最も建設的な感覚は？", "opts": ["「どこを改善すれば通るか」を考える", "「なぜ否定されたのか」を理解しようとする", "「次の提案を準備しよう」と切り替える", "否定された具体的なポイントをメモする"], "scores": [4, 5, 3, 4], "exp": "「なぜ否定されたか」を理解する姿勢が最も建設的な制御感です。改善・切替・記録は良い行動ですが、まず「理由の理解」が変化につながります。"}, {"cat": "Control", "text": "資格試験に落ちた直後の最も建設的な次の一手は？", "opts": ["何が足りなかったかを分析して次の受験計画を立てる", "しばらく休んで気持ちを整える", "合格者の勉強法を調査する", "間違えた問題を中心に弱点を徹底分析する"], "scores": [4, 3, 3, 5], "exp": "「弱点の徹底分析」が最も具体的で再現性のある制御感です。全体計画も大切ですが、具体的な行動レベルでの分析が次の成功率を上げます。"}, {"cat": "Control", "text": "長期プロジェクトが中断を余儀なくされた。\n空いた時間の最も建設的な使い方は？", "opts": ["他の業務に集中する", "再開時の準備や学習を進める", "プロジェクトの振り返りを文書化する", "関連スキルを伸ばす自己投資をする"], "scores": [3, 4, 5, 4], "exp": "中断中の振り返り文書化は再開時に最も価値を発揮します。学習・自己投資も良いですが、プロジェクトに直結する行動が制御感の応用力です。"}, {"cat": "Control", "text": "自分への厳しい批判を受けた。\n最も建設的な受け止め方は？", "opts": ["改善できる点と納得できない点を分けて整理", "批判の意図を確認してから判断する", "受け入れて全部改善する", "しばらく時間を置いて冷静になってから考える"], "scores": [5, 4, 3, 4], "exp": "「分けて整理する」が最も建設的です。意図確認も大切ですが、まず自分で吟味する姿勢が成熟した制御感です。"}, {"cat": "Control", "text": "チームの成果が目標を大きく下回った。\n反省会での最も価値ある発言は？", "opts": ["「自分が貢献できる改善策」を具体的に提案", "目標設定そのものの妥当性を問う", "プロセス全体の問題点を整理して共有", "各メンバーの強みをどう活かすかを再設計する"], "scores": [4, 3, 4, 5], "exp": "「強みの再設計」が最も前向きで具体的な貢献です。改善策の提案・プロセス整理も良いですが、再発を防ぐシステム視点が最も価値を生みます。"}, {"cat": "Control", "text": "市場変動など外部環境の急変。\n最も建設的な対応は？", "opts": ["変化に対応できる部分を特定して動く", "変化の本質を分析してから戦略を立てる", "変化を前提に既存計画を再設計する", "業界全体の動向を見ながら判断する"], "scores": [4, 5, 4, 3], "exp": "「変化の本質分析」が最も知的に成熟した制御感です。すぐ動くのも良いですが、本質を見極めた上での行動が長期的に効きます。"}, {"cat": "Control", "text": "重要な締め切りに間に合わない可能性が高い。\n最も建設的な最初の行動は？", "opts": ["関係者に早めに状況共有して代替案を相談", "完成度を下げて期限を守る", "期限延長を依頼してから対処", "間に合わせる方法を全力で探してから判断"], "scores": [5, 3, 3, 4], "exp": "早期の状況共有が最も誠実で建設的です。「全力で探す」も良いですが、関係者を巻き込まないと結果的に皆が困ります。"}, {"cat": "Control", "text": "自分の力ではどうにもならない状況に直面した。\n最も健全な向き合い方は？", "opts": ["コントロールできることに焦点を切り替える", "状況を受け入れて時を待つ", "誰に何を頼めるかを整理する", "自分の認識が正しいか客観的に確認する"], "scores": [4, 2, 4, 5], "exp": "「自分の認識が正しいか」を確認することが最も建設的です。「どうにもならない」と判断する前に、その判断自体を疑う姿勢が制御感の深さです。"}, {"cat": "Control", "text": "予期せず担当プロジェクトが変更になった。\n最も健全な内的対応は？", "opts": ["新しい状況でできることを見つけ始める", "変更の意図を理解しようとする", "これまでの経験をどう活かせるか考える", "変更を機に自分のキャリアを見直す"], "scores": [4, 5, 4, 3], "exp": "変更の「意図を理解する」ことが最も建設的です。すぐに行動するより、なぜそうなったかを理解することで次の行動の質が上がります。"}, {"cat": "Control", "text": "自分のアイデアが却下された。\n最も建設的な次の動きは？", "opts": ["「なぜ通らなかったか」を分析して再提案する", "別のアイデアを考えて出し直す", "却下した相手と個別に対話する", "承認プロセス自体を見直す提案をする"], "scores": [5, 3, 4, 4], "exp": "「なぜ通らなかったか」の分析が最も再現性ある制御感です。プロセス改善の提案も建設的ですが、まず個別の理解が先です。"}, {"cat": "Control", "text": "長期間頑張ってきたことが突然無駄になった。\n最も健全な対処は？", "opts": ["経験から残ったものを棚卸しする", "別の方向に切り替えて気持ちを切り替える", "次に活かせるスキル・知見を整理する", "ゆっくり休んで気持ちを整理する"], "scores": [4, 3, 5, 3], "exp": "「次に活かせるスキル・知見の整理」が最も実用的です。経験の棚卸しも良いですが、未来志向で再構成することで前進エネルギーになります。"}, {"cat": "Control", "text": "不公平な評価を受けたと感じた。\n最も建設的な対応は？", "opts": ["改善できる点と評価プロセスへの働きかけを両立", "評価者と直接対話して理解を深める", "次回に向けて評価される行動を強化する", "具体的な改善ポイントだけ抽出して動く"], "scores": [4, 5, 3, 4], "exp": "「直接対話で理解を深める」が最も建設的です。評価への対応は、まず「なぜそうなったか」の対話から始めると関係も改善します。"}, {"cat": "Control", "text": "コントロールできない問題に直面した時、どれくらいの時間悩み続けるか？", "opts": ["制御できないと判断したらできることに切り替える", "少し悩んで気持ちが落ち着いたら次に進む", "問題の構造を理解するまで悩む", "時間を区切って悩む"], "scores": [5, 3, 4, 4], "exp": "「制御できないと判断して切り替える」が最も成熟した制御感です。「構造の理解」も価値がありますが、過度の分析は行動を遅らせる罠になります。"}, {"cat": "Control", "text": "大きな失敗をした直後の最も建設的な内的反応は？", "opts": ["ダメージを最小化する次の一手を考える", "状況を冷静に把握する", "関係者への影響を整理する", "自分の感情を観察してから動く"], "scores": [4, 5, 4, 3], "exp": "「冷静に把握する」が最初の最も建設的な反応です。すぐ動くより、状況を見極めることで次の一手の質が変わります。"}, {"cat": "Control", "text": "チームが混乱している状況。\nあなたが取れる最も価値ある行動は？", "opts": ["自分にできる安定化の行動をとる", "リーダーをサポートして状況整理を助ける", "混乱の原因を分析して提案する", "各メンバーの状況を個別に確認する"], "scores": [4, 5, 4, 3], "exp": "「リーダーをサポートして整理を助ける」が最も建設的です。一人で動くより、システムとしての回復に貢献する視点が成熟した制御感です。"}, {"cat": "Control", "text": "長期目標が遠のいたと感じた時の最も建設的な対応は？", "opts": ["目標を細分化して今できる一歩を踏む", "目標自体を見直すべきか考える", "スケジュールを再設計する", "今までのアプローチを根本から見直す"], "scores": [4, 5, 3, 4], "exp": "「目標自体を見直すべきか」を考えるのが最も成熟した制御感です。盲目的に進むのではなく、目標の妥当性を問い直す柔軟性が重要です。"}, {"cat": "Control", "text": "「自分には何もできない」と感じた時、最も建設的な反応は？", "opts": ["本当に何もできないかを再検討する", "信頼できる人に相談して視点を広げる", "小さなことでもできることを探す", "状況を時間を置いて見直す"], "scores": [4, 5, 4, 3], "exp": "「他者の視点を借りる」のが最も効果的です。一人で抱え込んだ「何もできない」感覚は、外部の視点で打破できます。"}, {"cat": "Control", "text": "努力しているのに結果が出ない時、最も建設的な振り返り方は？", "opts": ["努力の方向性を疑う", "努力の方法を見直す", "成功している人と何が違うか分析する", "目指す結果そのものを再定義する"], "scores": [4, 4, 4, 5], "exp": "「結果そのものの再定義」が最も根本的な振り返りです。方向性・方法の見直しも大切ですが、そもそも何を目指していたかを問い直す視点が深い気づきを生みます。"}, {"cat": "Control", "text": "プロジェクトの進捗が見えなくなった時、最も建設的な行動は？", "opts": ["関係者と現状認識を一致させる", "タスクを再分解して進捗を可視化する", "定期的なチェックインの仕組みを作る", "リーダーに進捗管理を委ねる"], "scores": [5, 4, 4, 2], "exp": "「現状認識の一致」が最も基本的かつ建設的です。可視化や仕組み作りも有効ですが、まず認識のズレを解消することが優先です。"}, {"cat": "Origin & Ownership", "text": "プロジェクトが失敗した。\nまず最初に頭に浮かぶ考えとして最も健全なのは？", "opts": ["自分の責任の範囲を整理する", "チーム全体で振り返りの場を設ける", "関係者への影響を最小化する対応", "失敗の原因を多角的に分析する"], "scores": [4, 4, 3, 5], "exp": "「多角的な原因分析」が最も建設的です。責任範囲の整理も大切ですが、原因の理解が次への学びの基礎になります。"}, {"cat": "Origin & Ownership", "text": "チームのミスに自分も関与していた。\n最も誠実な対応は？", "opts": ["自分の関与した部分を明確に認め改善に動く", "チーム全体の課題として共有する", "自分の責任範囲を冷静に説明する", "再発防止策を提案して動く"], "scores": [4, 4, 3, 5], "exp": "「再発防止策を提案して動く」のが最も建設的です。責任の明確化も大切ですが、未来の行動に変えることで誠実さが具体的になります。"}, {"cat": "Origin & Ownership", "text": "クライアントへのクレームが自分のミスによる。\n最も誠実な対応は？", "opts": ["誠実に認めて謝罪し再発防止策を提示", "上司と相談してから対応を決める", "事実関係を整理してから謝罪", "原因と対処法を同時に伝える"], "scores": [4, 3, 4, 5], "exp": "「原因と対処法を同時に伝える」が最も誠実で実用的です。謝罪のみでは「次どうなるか」が見えず、不安を残します。"}, {"cat": "Origin & Ownership", "text": "プロジェクトが成功した。\n最も健全な原因の捉え方は？", "opts": ["自分の努力とチーム・環境の協力の両方が成功要因", "チームの成果として全体に貢献を帰す", "成功の要因を具体的に分析する", "運の要素も含めて謙虚に振り返る"], "scores": [4, 3, 5, 4], "exp": "「具体的な要因分析」が最も再現性のある成功理解です。「両方の貢献」も健全ですが、何が決定的だったかを把握しないと再現できません。"}, {"cat": "Origin & Ownership", "text": "失敗が3回続いた。\n最も建設的な分析は？", "opts": ["改善できることと環境的要因を客観的に分けて分析", "共通するパターンを探す", "信頼できる人に客観的な意見を求める", "自分のアプローチを根本から見直す"], "scores": [4, 5, 4, 4], "exp": "「共通するパターンを探す」が最も学びに繋がる分析です。3回繰り返されているということは、何かしらのパターンがあるはずです。"}, {"cat": "Origin & Ownership", "text": "自分のチームが他部署から批判された。\n最も建設的な反応は？", "opts": ["チームの一員として受け止め改善に貢献", "批判の具体的内容を理解しようとする", "チームメンバーと一緒に振り返る", "リーダーと連携して対応方針を決める"], "scores": [4, 5, 4, 3], "exp": "「批判の具体的内容を理解する」が最初の最も建設的な行動です。受け止めや行動の前に、何を批判されたかの正確な理解が必要です。"}, {"cat": "Origin & Ownership", "text": "自分の提案が却下され、後に別の案で成功した。\n最も建設的な振り返りは？", "opts": ["「自分の案のどこが不足していたか」を学ぶ", "採用された案の優れていた点を分析する", "自分の案と採用案を比較して構造を理解する", "次回の提案にどう活かすか具体策を考える"], "scores": [4, 4, 5, 4], "exp": "「両者を比較して構造を理解する」が最も深い学びです。一方だけの分析より、対比から本質が見えてきます。"}, {"cat": "Origin & Ownership", "text": "上司のミスで自分のプロジェクトが影響を受けた。\n最も建設的な対応は？", "opts": ["自分にできることに集中する", "上司と一緒に対処を考える", "影響を最小化する対策を実行する", "チーム全体で乗り切る方法を考える"], "scores": [3, 5, 4, 4], "exp": "「上司と一緒に対処を考える」が最も建設的です。上司のミスを「自分一人で受け止める」より、共に対処することで関係も解決も進みます。"}, {"cat": "Origin & Ownership", "text": "ミスを指摘された時の最も成熟した最初の反応は？", "opts": ["「ありがとう」と受け止めて改善を考える", "指摘内容を正確に理解する質問をする", "謝罪と同時に対処方針を伝える", "事実関係を冷静に確認する"], "scores": [4, 5, 4, 3], "exp": "「指摘内容を正確に理解する」が最初の最も成熟した反応です。受け止めや謝罪より先に、何が問題かを正確に把握することが重要です。"}, {"cat": "Origin & Ownership", "text": "成果が出なかった理由として最も建設的な解釈は？", "opts": ["自分のアプローチに改善できる点があった", "複数の要因が重なった結果", "自分のスキル・経験の不足", "環境と自分の両方に要因がある"], "scores": [4, 4, 3, 5], "exp": "「環境と自分の両方に要因がある」が最もバランスのとれた解釈です。一方に偏らずに両方を見られる視点が成熟したOwnershipです。"}, {"cat": "Origin & Ownership", "text": "自分の行動で人間関係が悪化した。\n最も健全な対応は？", "opts": ["自分の行動を振り返り誠実に向き合う", "相手の気持ちを直接聞いて理解する", "関係修復の具体的な行動をとる", "時間を置いて自分も冷静になってから動く"], "scores": [4, 5, 4, 3], "exp": "「相手の気持ちを直接聞く」が最も誠実で建設的です。自分の振り返りも大切ですが、相手の認識を理解しないと改善の方向性が見えません。"}, {"cat": "Origin & Ownership", "text": "失敗の原因として「運が悪かった」と考えるバランスは？", "opts": ["運の要素は認めるが、自分にも学べることを探す", "運に頼らないコントロール可能な要素を強化する", "次回に向けて運に左右されにくい計画を立てる", "運の要素は分けて捉えてリスク管理する"], "scores": [4, 4, 4, 5], "exp": "「運をリスクとして管理する」のが最も実用的なアプローチです。運を認めるだけでなく、運に左右されない仕組みづくりが成熟した責任意識です。"}, {"cat": "Origin & Ownership", "text": "チームの目標未達時の最も建設的な自己責任の捉え方は？", "opts": ["自分の貢献できなかった部分を具体的に把握する", "チーム全体での要因と自分の要因を分けて考える", "次回の自分の貢献をどう増やすか考える", "チームメンバーの状況も含めて理解する"], "scores": [4, 5, 4, 3], "exp": "「全体要因と自分要因を分けて考える」が最もバランスのとれた捉え方です。両者を区別することで責任感と客観性が両立します。"}, {"cat": "Origin & Ownership", "text": "重大なミス後の自己批判の健全なバランスは？", "opts": ["原因理解後は改善行動に移行", "必要な期間だけ反省して次に進む", "信頼できる人と話して客観性を保つ", "具体的な再発防止策を作って前進"], "scores": [4, 3, 4, 5], "exp": "「具体的な再発防止策を作る」が最も建設的です。反省の期間を区切るのも大切ですが、未来の行動に変えることが本当のOwnershipです。"}, {"cat": "Origin & Ownership", "text": "「自分のせいではない」失敗にどう関わる？", "opts": ["責任ではなくても改善に関与できる部分があれば動く", "関係者と一緒に対処を考える", "システム・プロセスの改善提案をする", "学びとして自分の中に取り込む"], "scores": [4, 4, 5, 4], "exp": "「システム・プロセスの改善提案」が最も価値ある関与です。個別の対処より仕組みに関与することで再発防止につながります。"}, {"cat": "Origin & Ownership", "text": "成功の功績を最も健全に帰属する方法は？", "opts": ["チーム・環境の貢献を認めながら自分の努力も適切に評価", "成功の要因を構造的に分析する", "関係者全員に具体的な感謝を伝える", "次回も再現できるよう要素を抽出する"], "scores": [4, 4, 4, 5], "exp": "「再現できるよう要素を抽出する」が最も学びに繋がる帰属方法です。感謝も大切ですが、何が効いたかを構造化することで次への力になります。"}, {"cat": "Origin & Ownership", "text": "同じ種類のミスを繰り返してしまう。\n最も建設的な解釈は？", "opts": ["繰り返す根本原因（思考パターン・習慣）を探って変える", "ミスの起こる状況を分析する", "チェックの仕組みを強化する", "信頼できる人に観察してもらう"], "scores": [5, 4, 4, 3], "exp": "「思考パターン・習慣を探って変える」が最も根本的なアプローチです。仕組み化や他者の観察も有効ですが、根本の変化が継続的な改善を生みます。"}, {"cat": "Origin & Ownership", "text": "批判を受けた時の最も成熟した最初の反応は？", "opts": ["「学べることはあるか」という問い", "「具体的にどこが？」と詳細を聞く", "感情を整理してから受け止める", "批判の意図を理解しようとする"], "scores": [4, 5, 3, 4], "exp": "「具体的にどこか」を聞くのが最初の最も成熟した反応です。学びを探す姿勢も大切ですが、まず正確な内容を把握することが先です。"}, {"cat": "Origin & Ownership", "text": "不当に責任を押しつけられた時の最も建設的な対応は？", "opts": ["事実を冷静に説明しながら自分の貢献は提示", "記録を整理して客観的事実を示す", "建設的な解決策を一緒に考える姿勢を示す", "関係者に状況を正確に共有する"], "scores": [4, 4, 5, 4], "exp": "「建設的な解決策を一緒に考える姿勢」が最も成熟した対応です。事実の説明も必要ですが、対立より協力に向かう姿勢が長期的な信頼を生みます。"}, {"cat": "Origin & Ownership", "text": "同じ失敗をした同僚への最も建設的な見方は？", "opts": ["本人の改善点と環境的要因の両方を考える", "同じ立場で何が必要かを理解する", "具体的にどう改善できるか一緒に考える", "システム的にミスが起きやすい構造を見直す"], "scores": [4, 4, 4, 5], "exp": "「システム的に起きやすい構造を見直す」が最も成熟した視点です。個人の問題から構造の問題への視点拡張が、組織全体の改善につながります。"}, {"cat": "Origin & Ownership", "text": "今の自分の状況の原因として最も健全な認識は？", "opts": ["自分の選択と環境的要因の両方が影響", "複数の要素が時間をかけて積み重なった結果", "自分の選択が積み重なって今がある", "環境の影響を受けながら自分が動いてきた結果"], "scores": [4, 5, 4, 4], "exp": "「複数の要素が時間をかけて積み重なった結果」が最も成熟した認識です。単純な二項対立ではなく、時間軸も含めた構造的理解がOwnershipの深さです。"}, {"cat": "Origin & Ownership", "text": "チームの成功における自分の貢献の最も健全な評価は？", "opts": ["具体的な貢献部分を把握しているが過大評価はしない", "自分の役割と他のメンバーの役割を区別して認識", "チームの相互作用の中での自分の位置を理解する", "次のチームでも再現できる要素を抽出する"], "scores": [4, 4, 5, 4], "exp": "「相互作用の中での自分の位置を理解する」が最も成熟した自己評価です。個人の貢献の絶対値より、関係の中での役割理解が深いOwnershipです。"}, {"cat": "Origin & Ownership", "text": "謝罪に臨む時の最も誠実な姿勢は？", "opts": ["自分の責任の範囲を明確にした上で誠実に謝る", "相手の感情を最大限に受け止める", "原因と対処を含めて伝える", "関係修復への具体的な行動を約束する"], "scores": [3, 4, 5, 4], "exp": "「原因と対処を含めて伝える」が最も実用的な謝罪です。感情への配慮も大切ですが、何が起きてどう改善するかが見えると相手の不安が解消されます。"}, {"cat": "Origin & Ownership", "text": "自分の長所と短所の把握として最も建設的なのは？", "opts": ["両方を具体的に把握し短所の改善に取り組む", "長所を活かしながら短所をカバーする仕組みを作る", "信頼できる人からのフィードバックを定期的に求める", "状況によって長所と短所が変わることを理解する"], "scores": [4, 5, 4, 3], "exp": "「長所活用と短所カバーの仕組み」が最も実践的です。改善のみでなく仕組みで対処する視点が成熟した自己理解です。"}, {"cat": "Origin & Ownership", "text": "うまくいかない期間が続いている。\n最も建設的な内省は？", "opts": ["改善できる思考・習慣を探して変える", "パターンを観察して根本原因を理解する", "信頼できる人と話して視点を増やす", "環境と自分の両方を冷静に見直す"], "scores": [4, 5, 4, 4], "exp": "「パターンを観察して根本原因を理解する」が最も深い内省です。表面的な改善ではなく、繰り返されているパターンの根を見つけることが転換点になります。"}, {"cat": "Reach", "text": "仕事でひどいミスをした。\n最も健全な「影響」の捉え方は？", "opts": ["このミスの影響範囲を冷静に整理する", "影響を最小化する対処を急ぐ", "必要な関係者にだけ正確に伝える", "ミスの種類と影響を切り分けて考える"], "scores": [4, 3, 4, 5], "exp": "「ミスの種類と影響を切り分ける」が最も建設的です。影響を「全体に波及する」と感じる前に、構造的に切り分けることが冷静な制御につながります。"}, {"cat": "Reach", "text": "プロジェクトが失敗した。\n人間関係への影響について最も健全な捉え方は？", "opts": ["失敗はプロジェクトの話で、関係は別と捉える", "関係者ごとに影響を整理する", "信頼関係への具体的な影響を見極める", "関係の修復が必要かどうか個別に判断する"], "scores": [4, 4, 5, 4], "exp": "「具体的な影響を見極める」が最もバランスのとれた捉え方です。一律に「別」と切り捨てるより、実際の影響を見て対処することが現実的です。"}, {"cat": "Reach", "text": "上司に強く叱責された。\n最も健全な影響の捉え方は？", "opts": ["この件への評価で全体評価は別と限定する", "叱責の内容と評価の関係を整理する", "具体的な改善点を抽出して関連付けない", "叱責を受けた事実と関係性は分けて考える"], "scores": [4, 5, 4, 4], "exp": "「内容と評価の関係を整理する」が最も建設的な捉え方です。叱責を全体評価から切り離す前に、何が評価され何が叱責されたのかを整理することが必要です。"}, {"cat": "Reach", "text": "チームのモチベーションが下がっている。\n最も健全な見方は？", "opts": ["このフェーズの問題で対処すれば回復可能", "低下の具体的な原因を特定する", "各メンバー個別の状況を理解する", "チーム全体への影響範囲を見極める"], "scores": [4, 5, 4, 3], "exp": "「具体的な原因を特定する」が最も実用的です。「一時的だ」と捉えるだけでは対処が遅れます。原因を特定して動くことが回復の前提です。"}, {"cat": "Reach", "text": "友人との一時的な関係悪化。\n最も健全な見方は？", "opts": ["この友人関係の問題で他は別と限定する", "関係悪化の具体的な原因を理解する", "関係の本質的な質と表面的な摩擦を分ける", "時間を置きながら状況を見極める"], "scores": [4, 4, 5, 3], "exp": "「本質的な質と表面的な摩擦を分ける」が最も洞察的です。一時的なズレなのか根本的な問題なのかの区別が重要です。"}, {"cat": "Reach", "text": "健康上の問題が出てきた。\n仕事への影響の最も健全な捉え方は？", "opts": ["療養しながらできることを考え必要部分を調整", "業務への影響範囲を医療的に把握する", "チームと相談して持続可能な働き方を作る", "回復までの段階的な計画を立てる"], "scores": [4, 3, 5, 4], "exp": "「持続可能な働き方を作る」が最も実用的なアプローチです。一人で「調整する」より、チームを巻き込んで持続的な解決を作ることが現実的です。"}, {"cat": "Reach", "text": "重要なプレゼンで失敗した。\n未来への影響の最も健全な捉え方は？", "opts": ["一回の失敗は次への学びで全体評価とは別", "失敗の具体的な原因を分析する", "次回のプレゼンへの具体的改善点を抽出", "失敗の事実と自分の能力は分けて考える"], "scores": [4, 5, 4, 4], "exp": "「失敗の原因分析」が最も次に活きる捉え方です。「全体とは別」と切り離すだけでは学びが薄くなります。"}, {"cat": "Reach", "text": "苦手な仕事が続いている。\n最も健全な見方は？", "opts": ["特定の作業が苦手なだけで他の自信は別", "苦手の本質を分析する", "得意な部分と組み合わせる方法を探す", "苦手を克服する戦略を立てる"], "scores": [3, 4, 5, 4], "exp": "「得意と組み合わせる方法」が最も実用的です。苦手を克服するより、強みを活かしながら補完する設計が成熟したアプローチです。"}, {"cat": "Reach", "text": "職場での人間関係トラブルの最も健全な捉え方は？", "opts": ["この相手との問題で他の関係は別に育てられる", "トラブルの根本原因を理解する", "関係修復が必要かどうか判断する", "他のメンバーへの影響を最小化する"], "scores": [3, 5, 4, 4], "exp": "「根本原因を理解する」が最も建設的です。表面的に切り離すより、なぜトラブルが起きたかの理解が次の対人スキルにもつながります。"}, {"cat": "Reach", "text": "一度大きな失敗をしたあと、次の挑戦への最も健全な向き合い方は？", "opts": ["失敗は特定の状況で次は新しいチャンス", "失敗から学んだことを具体的に活かす", "リスクを認識した上で慎重に挑戦する", "失敗の文脈と新しい挑戦を区別する"], "scores": [4, 5, 4, 4], "exp": "「失敗から学んだことを具体的に活かす」が最も実りある向き合い方です。文脈を区別するだけでなく、活用することで成長になります。"}, {"cat": "Reach", "text": "評価期間の成果が低かった時の最も健全な捉え方は？", "opts": ["この期間の結果で次は新たに挑戦できる", "低評価の具体的要因を理解する", "次の評価期間の戦略を立てる", "評価される行動と自分の本質を分ける"], "scores": [4, 5, 4, 3], "exp": "「具体的要因を理解する」が最も再起のために重要です。「次は別」と切り替えるだけでは同じ失敗を繰り返します。"}, {"cat": "Reach", "text": "一つの分野でスランプ。\n他分野への影響の最も健全な見方は？", "opts": ["スランプはこの分野に限り、他は別", "スランプの原因が他にも影響しないか確認", "他分野の活動でバランスを保つ", "スランプを抜けるためのアプローチを探る"], "scores": [3, 5, 4, 4], "exp": "「他にも影響しないか確認する」が最も注意深い対応です。「他は別」と仮定するより、実際に影響があるかを見極めることが現実的です。"}, {"cat": "Reach", "text": "失敗が続いた時の自分の人間性への最も健全な捉え方は？", "opts": ["失敗はパフォーマンスの問題で人間性とは別", "パフォーマンス低下の構造的原因を理解する", "信頼できる人に率直なフィードバックを求める", "自己効力感を意識的に維持する活動をする"], "scores": [4, 4, 5, 4], "exp": "「率直なフィードバックを求める」が最も健全な対処です。一人で人間性を否定する前に、客観的な視点を借りることで認識が修正されます。"}, {"cat": "Reach", "text": "職場で評価が低い時の家庭への影響の最も健全な捉え方は？", "opts": ["仕事の評価は仕事の話、家族は別", "家族と率直に状況を共有する", "ストレスが家庭に出ないよう意識する", "仕事と家庭の境界を意識的に保つ"], "scores": [3, 5, 4, 4], "exp": "「家族と率直に状況を共有する」が最も健全な対応です。「家族は別」と切り離すだけでは隠すことになり、信頼関係に影響します。"}, {"cat": "Reach", "text": "一度信頼を失った時の最も健全な捉え方は？", "opts": ["この相手との回復に取り組み他は別", "信頼を失った原因を具体的に理解する", "信頼回復の具体的な行動を継続する", "失った信頼の範囲と本質を見極める"], "scores": [3, 4, 5, 4], "exp": "「具体的な行動を継続する」が最も信頼回復に直結します。捉え方より行動の継続が信頼を取り戻します。"}, {"cat": "Reach", "text": "苦手な相手と話した後、その影響をどれくらい引きずる？", "opts": ["会話は終わり、次の行動に集中", "少し引きずるが切り替える", "違和感の正体を整理してから次に進む", "必要に応じて整理しつつ業務は続ける"], "scores": [4, 3, 5, 4], "exp": "「違和感の正体を整理してから進む」が最も成熟した対処です。完全に切り替えるより、何が引っかかっているかを言語化することで本当に解放されます。"}, {"cat": "Reach", "text": "大切な人間関係が終わった時の最も健全な向き合い方は？", "opts": ["この関係は悲しいが他は大切にできる", "関係の終わりから学べることを理解する", "新しい関係を築く意欲を保つ", "失った関係を含めて経験として統合する"], "scores": [4, 5, 4, 4], "exp": "「関係の終わりから学ぶ」が最も成長につながる向き合い方です。切り離すだけでなく学びに変えることで次の関係に活きます。"}, {"cat": "Reach", "text": "健康不安を抱えている時、仕事への影響の最も健全な捉え方は？", "opts": ["対処しながら影響を最小限にする工夫", "必要な部分は早めに関係者に共有する", "医療と仕事の両方を計画的に管理する", "状況に応じて柔軟に調整する"], "scores": [3, 4, 5, 4], "exp": "「医療と仕事を計画的に管理する」が最も実用的なアプローチです。漠然と「工夫する」より、計画的な管理が持続可能性を生みます。"}, {"cat": "Reach", "text": "一つの目標が達成できなかった時、他目標への影響は？", "opts": ["この目標が未達でも他は独立して追える", "目標間の関連を整理する", "未達の原因が他に影響しないか確認", "目標体系を見直す機会にする"], "scores": [3, 4, 4, 5], "exp": "「目標体系を見直す機会にする」が最も生産的です。失敗を体系的な学びに変えることで全目標の質が上がります。"}, {"cat": "Reach", "text": "職場での不満が他のことに与える影響は？", "opts": ["職場の不満は職場の話、私生活は別", "不満の本質を見極めて対処する", "信頼できる人と話して整理する", "不満を建設的なエネルギーに変える"], "scores": [3, 4, 4, 5], "exp": "「建設的なエネルギーに変える」が最も成熟したアプローチです。切り離すだけでなく、不満を改善行動の動機に変える視点が成長です。"}, {"cat": "Reach", "text": "体調不良で数日休んだ後の復帰への最も健全な向き合い方は？", "opts": ["数日の休養ですぐ元のペースを取り戻せる", "段階的にペースを戻す計画を立てる", "必要なサポートをチームに依頼する", "体調と業務を継続的にバランスする"], "scores": [3, 4, 5, 4], "exp": "「サポートを依頼する」が最も健全です。一人で戻ろうとするより、チームと協力することが持続可能な復帰につながります。"}, {"cat": "Reach", "text": "批判的フィードバックの最も健全な捉え方は？", "opts": ["この点への改善情報で全体評価は別", "フィードバックの具体的内容を理解する", "改善できる点と納得できない点を分ける", "批判の意図と表現を分けて受け止める"], "scores": [3, 4, 5, 4], "exp": "「分けて整理する」が最もバランスのとれた捉え方です。全否定でも全肯定でもなく、構造的に整理することで建設的に活かせます。"}, {"cat": "Reach", "text": "新しい挑戦で失敗した時、今後への最も健全な向き合い方は？", "opts": ["この挑戦の失敗は学び、他の意欲は別", "失敗の具体的な学びを整理する", "次の挑戦への準備を強化する", "失敗の経験を強みに変換する"], "scores": [3, 4, 4, 5], "exp": "「失敗の経験を強みに変換する」が最も成長志向の向き合い方です。意欲を守るだけでなく、経験そのものを資源にする視点です。"}, {"cat": "Reach", "text": "スランプ中の自分の捉え方として最も健全なのは？", "opts": ["特定の状況でのパフォーマンス低下で能力・価値とは別", "スランプの構造的原因を分析する", "スランプを脱出した経験者から学ぶ", "小さな成功体験を意識的に積み重ねる"], "scores": [3, 4, 4, 5], "exp": "「小さな成功体験を積み重ねる」が最も実践的な対処です。捉え方を変えるだけでなく、行動で自己効力感を取り戻す視点が重要です。"}, {"cat": "Reach", "text": "一分野での失敗が自分の全体的な価値に与える影響は？", "opts": ["分野でのパフォーマンスの話で価値とは別", "価値の構成要素を多面的に理解する", "価値判断の主体を自分の内側に保つ", "失敗の経験も価値の一部として統合する"], "scores": [3, 4, 5, 4], "exp": "「価値判断の主体を内側に保つ」が最も健全な姿勢です。外部評価で価値が変動しないことが、安定した自己感覚の基盤になります。"}, {"cat": "Endurance", "text": "大きな失敗をした後、状況の最も健全な捉え方は？", "opts": ["適切に対処すれば改善する一時的なもの", "具体的な対処の道筋を明確にする", "期間と段階を見積もって対処する", "必ず変わるという確信を持つ"], "scores": [3, 5, 4, 3], "exp": "「対処の道筋を明確にする」が最も実用的です。「一時的だ」と信じるだけより、具体的にどう対処するかが見えると本当に持続できます。"}, {"cat": "Endurance", "text": "スランプ中の最も健全な見方は？", "opts": ["努力と方法の調整で必ず抜け出せる", "抜け出すための具体的アプローチを試す", "スランプの構造を理解してから動く", "小さな前進を積み重ねて確信を取り戻す"], "scores": [3, 4, 4, 5], "exp": "「小さな前進を積み重ねる」が最も持続可能な対処です。信念や理解だけでなく、実際の前進体験が確信を生みます。"}, {"cat": "Endurance", "text": "人間関係のトラブルへの最も健全な見方は？", "opts": ["誠実に取り組めば解決か改善できる", "対話の機会を意識的に作る", "時間と誠実さの両方が必要と理解する", "相手のペースも尊重しながら関わり続ける"], "scores": [3, 4, 4, 5], "exp": "「相手のペースも尊重しながら関わり続ける」が最も成熟した姿勢です。一方的な誠実さより、相手のリズムを尊重する継続が真の解決を生みます。"}, {"cat": "Endurance", "text": "長期プロジェクトの困難な局面での最も健全な見方は？", "opts": ["この難しい時期は乗り越えられる一時的なフェーズ", "フェーズの本質を理解して対処する", "チームと共に乗り越える前提で動く", "困難な局面が次のフェーズへの準備と捉える"], "scores": [3, 4, 4, 5], "exp": "「次のフェーズへの準備と捉える」が最も成長志向です。困難を「乗り越える対象」ではなく「準備期間」と捉える視点が成熟したEnduranceです。"}, {"cat": "Endurance", "text": "体調が悪い日が続いた時の最も健全な見方は？", "opts": ["適切なケアで必ず回復する", "回復の段階的なプロセスを理解する", "必要な医療と休養を計画的に取る", "回復後の生活設計も含めて考える"], "scores": [3, 4, 4, 5], "exp": "「回復後の設計も含めて考える」が最も持続可能な向き合い方です。回復だけでなく、再発防止と健康的な生活への移行を視野に入れます。"}, {"cat": "Endurance", "text": "仕事のスランプの最も健全な捉え方は？", "opts": ["必ず終わるしその後は更に成長できる", "成長機会としてどう活かすか考える", "スランプの構造的原因に取り組む", "次のレベルへの移行期と捉える"], "scores": [3, 4, 4, 5], "exp": "「次のレベルへの移行期と捉える」が最も成熟した捉え方です。スランプを「停滞」ではなく「変容のプロセス」として捉える視点が深さです。"}, {"cat": "Endurance", "text": "低評価が続いた時の最も健全な見方は？", "opts": ["努力と改善を続ければ評価は変わる", "評価の構造を理解してから動く", "具体的な改善点を抽出して継続的に取り組む", "評価される行動の本質を見極める"], "scores": [3, 4, 4, 5], "exp": "「評価される行動の本質を見極める」が最も実効性ある視点です。表面的に「努力すれば変わる」と信じるより、何が評価されるかを構造的に理解します。"}, {"cat": "Endurance", "text": "困難な状況で前向きさを保つために最も助けになるのは？", "opts": ["「これは一時的・自分には乗り越える力がある」という信念", "小さな前進体験を意識的に作る", "信頼できる人との対話で視点を保つ", "目的・意味を再確認する"], "scores": [3, 4, 4, 5], "exp": "「目的・意味を再確認する」が最も持続的な力になります。信念や前進体験も大切ですが、なぜこれをやっているかという根源的な問いが最も強い前進力を生みます。"}, {"cat": "Endurance", "text": "大きなミスの記憶への最も健全な向き合い方は？", "opts": ["対処と振り返りが終われば前に進める", "学びとして自分の中に統合する", "必要な時にだけ思い出して活用する", "記憶ごと新しい経験で上書きする"], "scores": [3, 5, 4, 3], "exp": "「学びとして統合する」が最も成熟した向き合い方です。忘れるのではなく、自分の一部として活用できる形で取り込むことが本当の前進です。"}, {"cat": "Endurance", "text": "人間関係の問題解決にかかる時間の最も健全な見方は？", "opts": ["誠実に取り組めば解決の道筋が見える", "関係の質と問題の深さで時間は変わる", "双方の準備が整うまで待つ姿勢も必要", "時間と対話の両方を計画的に投資する"], "scores": [3, 5, 4, 4], "exp": "「関係の質と問題の深さで時間は変わる」が最も現実的な見方です。一律の楽観や悲観でなく、状況に応じた期待値設定が成熟さです。"}, {"cat": "Endurance", "text": "今のつらい状況について「いつか終わる」と信じられるか？", "opts": ["信じられる、必ず変化する", "変化の根拠を見極めながら信じる", "終わらせるための行動を続ける", "終わるかどうかより今の対処に集中する"], "scores": [3, 4, 4, 5], "exp": "「今の対処に集中する」が最も実用的な姿勢です。「いつか終わる」と信じることより、目の前の行動に集中することが結果的に状況を変えます。"}, {"cat": "Endurance", "text": "キャリアの挫折時の将来への最も健全な見方は？", "opts": ["挫折は今の困難で、将来は別のチャンスがある", "挫折からの学びをキャリアに活かす", "新しい方向性を含めて選択肢を広げる", "自分の本当に価値ある仕事を再定義する"], "scores": [3, 4, 4, 5], "exp": "「本当に価値ある仕事を再定義する」が最も成熟した捉え方です。挫折を「次のチャンスの予兆」ではなく「自分の本質を見直す機会」と捉える深さです。"}, {"cat": "Endurance", "text": "新しいことを学ぶのが難しい時の最も健全な見方は？", "opts": ["時間と努力を続ければ必ずできる", "学習方法を試行錯誤しながら続ける", "小さな到達点を設定して進む", "学習プロセス自体を楽しむ姿勢を保つ"], "scores": [3, 4, 4, 5], "exp": "「学習プロセス自体を楽しむ」が最も持続的な姿勢です。結果や到達より、学ぶこと自体に価値を見出すことが本当のEnduranceです。"}, {"cat": "Endurance", "text": "困難な時期の意味づけとして最も健全なのは？", "opts": ["困難は必ず成長につながる", "具体的にどんな成長があるか考える", "困難の中の経験を大切にする", "困難と成長の関係を冷静に見極める"], "scores": [3, 4, 4, 5], "exp": "「困難と成長の関係を冷静に見極める」が最も成熟した姿勢です。盲目的に「成長になる」と信じるより、本当に何を学んでいるかを見ます。"}, {"cat": "Endurance", "text": "逆境の中で「明日は今日より良くなる」と信じられるか？", "opts": ["信じられる、必ず好転する", "具体的な行動で良くする", "信じる根拠を確認しながら動く", "良くするための条件を整える"], "scores": [3, 4, 4, 5], "exp": "「良くするための条件を整える」が最も主体的な姿勢です。信じる・行動するだけでなく、構造的に好転の土台を作る視点です。"}, {"cat": "Endurance", "text": "長期間うまくいかない時に最も助けになる思考は？", "opts": ["「これは一時的・自分は乗り越えられる」", "「方法を変えれば何かが変わる」", "「学べることが必ずある」", "「今を生き抜く」"], "scores": [3, 4, 4, 5], "exp": "「今を生き抜く」が最も根源的な姿勢です。未来への信念より、目の前の一日を大切に生きることが結果的に長期を支えます。"}, {"cat": "Endurance", "text": "信頼を裏切られた後「また信頼できるようになる」と思えるか？", "opts": ["時間はかかっても信頼関係を築ける", "信頼の本質を見極めて慎重に再構築", "新しい人との関係から自然に育てる", "裏切りも含めて人間関係の現実と捉える"], "scores": [3, 4, 4, 5], "exp": "「現実として捉える」が最も成熟した受け止めです。理想化された信頼観でなく、人間関係の現実を含めて受け入れる視点が深いEnduranceです。"}, {"cat": "Endurance", "text": "目標への道のりが遠く感じる時、達成への信念は？", "opts": ["継続し続ければ必ず達成できる", "目標の意味を定期的に再確認する", "プロセス自体に価値を見出す", "達成と道のりの両方を大切にする"], "scores": [3, 4, 4, 5], "exp": "「両方を大切にする」が最もバランスのとれた姿勢です。達成だけ・プロセスだけではなく、両方を統合する視点が持続力を生みます。"}, {"cat": "Endurance", "text": "何ヶ月も続く仕事の困難への最も健全な見方は？", "opts": ["適切に対処を続ければ必ず変わる", "対処の質を上げ続ける姿勢を保つ", "チームと共に乗り越える前提で動く", "困難の中でも自分の核を保つ"], "scores": [3, 4, 4, 5], "exp": "「自分の核を保つ」が最も持続力を支えます。困難に飲み込まれず、自分の価値観や目的を保ち続けることが長期戦の支えです。"}, {"cat": "Endurance", "text": "今の困難な状況から学んでいることを感じるか？", "opts": ["困難の中に必ず学びがあり将来の力になる", "具体的に何を学んでいるか言語化できる", "学びは後で振り返って初めてわかる", "困難そのものが学びだと受け入れる"], "scores": [3, 5, 4, 4], "exp": "「具体的に言語化できる」が最も成長を確実にします。漠然と「学びがある」と信じるより、何を学んでいるかを言葉にすることで本当に身につきます。"}, {"cat": "Endurance", "text": "喪失の後「また幸せになれる」と思えるか？", "opts": ["時間はかかっても必ずまた幸せを感じられる", "幸せの形は変わってもまた感じられる", "喪失も含めた新しい自分の人生を歩む", "幸せと喪失の両方を抱えて生きる"], "scores": [3, 4, 4, 5], "exp": "「両方を抱えて生きる」が最も成熟した受け止めです。喪失を「乗り越える」のではなく、自分の一部として統合する視点が深さです。"}, {"cat": "Endurance", "text": "何度挑戦してもうまくいかない時、信じられるのは？", "opts": ["方法を変えて続ければ必ずうまくいく", "成功の定義を再考する必要があるかも", "挑戦そのものに意味がある", "続けるか方向転換かを冷静に判断する"], "scores": [3, 4, 4, 5], "exp": "「冷静に判断する」が最も成熟した姿勢です。盲目的に続けるのも諦めるのもどちらも極端で、状況を見て判断する柔軟性が真のEnduranceです。"}, {"cat": "Endurance", "text": "困難な時期が「自分を成長させている」と感じるか？", "opts": ["困難は自分を成長させてくれる", "成長の具体的な実感がある", "成長は後で振り返って気づくもの", "成長と困難の関係は単純ではないと理解"], "scores": [3, 4, 4, 5], "exp": "「単純ではないと理解する」が最も誠実な姿勢です。「困難＝成長」という単純化を避け、現実の複雑さを受け入れる視点が成熟さです。"}, {"cat": "Endurance", "text": "現在の逆境について「永遠には続かない」と確信できるか？", "opts": ["確信できる、永遠には続かない", "変化は必ず起きると信じている", "終わりまでの過程を大切にする", "続く/続かないより今をどう生きるかを考える"], "scores": [3, 4, 4, 5], "exp": "「今をどう生きるかを考える」が最も主体的です。未来の予測より、現在の行動に焦点を当てる視点が結果的に状況を変えます。"}, {"cat": "Endurance", "text": "長期的な困難の中でモチベーションを保つ最も持続的な方法は？", "opts": ["「これは一時的・乗り越えた先に成長」という信念", "目的・意味を定期的に再確認する", "小さな前進体験を意識的に作る", "信頼できる人との繋がりを保つ"], "scores": [3, 4, 4, 5], "exp": "「信頼できる人との繋がりを保つ」が最も持続的なリソースです。一人での信念や前進より、関係性の中での継続が長期戦を支えます。"}];
+
+// ═══════════════════════════════════════════════════════════
+//  EQレベル定義
+// ═══════════════════════════════════════════════════════════
+const LEVELS=[
+  {min:90,label:'非常に高い AQ',desc:'逆境指数が非常に高く、困難・変化・挫折の中でも前進し続けられます。リーダーとしての資質も備えています。'},
+  {min:78,label:'高い AQ',desc:'逆境指数が高く、多くの困難な場面で粘り強く対処できます。さらなる成長で困難の質も乗り越えられます。'},
+  {min:63,label:'平均以上の AQ',desc:'逆境への対処力は平均以上です。意識的に「制御感」「責任の帰属」「波及制御」「持続信念」を鍛えることでさらに伸びます。'},
+  {min:48,label:'平均的な AQ',desc:'逆境指数は一般的な水準です。特定のカテゴリに意識を向けることで大きな成長が見込まれます。'},
+  {min:0,label:'成長の余地あり',desc:'逆境指数を高めることで、困難・変化への対応力が大きく改善する可能性があります。'},
+];
+const CAT_COMMENTS={
+  'Control':{hi:'状況がどれほど厳しくても、「自分にできること」に焦点を当てて動けています。',mid:'制御感はある程度あります。困難な時こそ「コントロールできる範囲」を探す習慣でさらに伸びます。',lo:'困難な状況で「今すぐできる小さな一歩は何か」を問う習慣を始めましょう。'},
+  'Origin & Ownership':{hi:'自分の責任の範囲を正確に認識し、過剰自責でも他責でもなくバランスよく対処できています。',mid:'責任意識はある程度あります。失敗時に「自分の責任範囲」と「環境的要因」を分けて分析する習慣で深まります。',lo:'まず失敗を振り返る時に「自分の責任の範囲はどこからどこまでか」を意識する練習を始めましょう。'},
+  'Reach':{hi:'困難の影響を「波及させない」スキルが高く、一つの問題に飲み込まれずに動けています。',mid:'波及制御はある程度できています。「これはこの件だけのこと」と意識的に区切る練習で伸びます。',lo:'困難な出来事に対して「これは何の話で、何の話ではないか」を分けて考える練習を始めましょう。'},
+  'Endurance':{hi:'困難な状況を「一時的なもの」と捉え、必ず変化するという信念を持って前進できています。',mid:'「一時性」への信念はある程度あります。「これは永遠には続かない」という言葉を意識的に使う練習でさらに深まります。',lo:'まず困難な時に「これはずっと続くわけではない」「適切に対処すれば変わる」と自分に言い聞かせる練習を始めましょう。'}
+};
+
+// ═══════════════════════════════════════════════════════════
+//  定数・状態
+// ═══════════════════════════════════════════════════════════
+const PER_SESSION=20,CAT_PER=5;
+const STORAGE_KEY='aq_test_results_v1';
+const GAS_URL='https://script.google.com/macros/s/AKfycbzRKMVdPcDS0bUschN29ITAL9Twa1rp7NZWHK1wnDsFCslzNLKxzbKHwymDMKeliy1lQA/exec';
+let questions=[],cur=0,totalScore=0,elapsed=0,startTime=0,timerID=null,catScores={},currentName='';
+
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+// ★ 選択肢と点数をセットでシャッフル
+function shuffleOpts(q){
+  const pairs=shuffle(q.opts.map((o,i)=>({o,s:q.scores[i]})));
+  return {...q,opts:pairs.map(p=>p.o),scores:pairs.map(p=>p.s)};
+}
+
+function pickQuestions(){
+  const cats=[...new Set(BANK.map(q=>q.cat))];
+  let sel=[];
+  cats.forEach(c=>{const pool=shuffle(BANK.filter(q=>q.cat===c));sel.push(...pool.slice(0,CAT_PER));});
+  return shuffle(sel).map(q=>shuffleOpts(q));
+}
+
+function show(id){['s-intro','s-test','s-result'].forEach(s=>{document.getElementById(s).style.display=(s===id?'block':'none');});}
+function fmtDate(iso){const d=new Date(iso);return`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
+function loadResults(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+function saveResult(r){const all=loadResults();all.push(r);localStorage.setItem(STORAGE_KEY,JSON.stringify(all));}
+async function sendToServer(record){
+  try{await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(record)});return true;}
+  catch(e){return false;}
+}
+
+function showIntro(){
+  const all=loadResults();
+  const urlName=new URLSearchParams(window.location.search).get('name')||'';
+  const storedName=localStorage.getItem('test_player_name')||'';
+  const recentName=urlName||storedName||(all.length?all[all.length-1].name:'');
+  const histHTML=all.length===0?`<p class="hist-empty">まだ記録がありません</p>`
+    :all.slice().reverse().slice(0,5).map(r=>`
+      <div class="hist-item">
+        <span class="hist-eq">${r.eq}</span>
+        <div class="hist-meta"><div class="hist-name">${r.name}</div><div class="hist-date">${fmtDate(r.date)}</div></div>
+        <div class="hist-score">${r.score}/${PER_SESSION*5}点<br><span style="color:var(--text3);font-size:11px">${r.level}</span></div>
+      </div>`).join('');
+
+  document.getElementById('s-intro').innerHTML=`
+    <div class="card">
+      <div class="intro-header">
+        <div class="intro-logo">⛰️</div>
+        <div>
+          <div class="intro-title">AQ テスト</div>
+          <div class="intro-sub">逆境指数テスト（Adversity Quotient）</div>
+        </div>
+      </div>
+      <div class="meta-grid">
+        <div class="meta-box"><div class="meta-n">${PER_SESSION}</div><div class="meta-l">出題数</div></div>
+        <div class="meta-box"><div class="meta-n">100</div><div class="meta-l">満点</div></div>
+        <div class="meta-box"><div class="meta-n">4択</div><div class="meta-l">回答形式</div></div>
+      </div>
+      <div class="cats-row"><span class="cat-pill">Control</span><span class="cat-pill">Origin & Ownership</span><span class="cat-pill">Reach</span><span class="cat-pill">Endurance</span></div>
+      <div class="notice-box">
+        ✔ 選択肢の順番は毎回ランダムです<br>
+        ✔ 点数は最後まで表示されません<br>
+        ✔ <strong>「正しそう」ではなく「実際の自分」を選んでください</strong><br>
+        ✔ どれも正解に見える問題が多いです
+      </div>
+      <div class="name-section">
+        <div class="name-row-input">
+          <span class="name-label">名前</span>
+          <input class="name-input" id="name-input" type="text" maxlength="30" placeholder="山田 太郎"
+            value="${recentName.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"
+            oninput="document.getElementById('name-err').style.display='none'"
+            onkeydown="if(event.key==='Enter')startTest()">
+        </div>
+        <p id="name-err" class="name-error">名前を入力してください</p>
+      </div>
+      <button class="btn-primary" onclick="startTest()">テストを開始する →</button>
+    </div>
+    <div class="card-sm">
+      <div class="hist-hdr">
+        <span class="hist-ttl">過去の記録${all.length?`（${all.length}件）`:''}</span>
+        ${all.length?`<button class="btn-sm" onclick="exportCSV()">CSV出力</button>`:''}
+      </div>
+      ${histHTML}
+    </div>
+    <p class="note-sm">このテストは簡易的な目安です。正式な評価は専門家にご相談ください。<br>Created by S.O.Y</p>`;
+  show('s-intro');
+}
+
+function startTest(){
+  const input=document.getElementById('name-input');
+  const name=(input?input.value:'').trim();
+  if(!name){const err=document.getElementById('name-err');if(err)err.style.display='block';input&&input.focus();return;}
+  currentName=name;questions=pickQuestions();cur=0;totalScore=0;elapsed=0;catScores={};
+  questions.forEach(q=>{if(!catScores[q.cat])catScores[q.cat]=0;});
+  startTime=Date.now();show('s-test');
+  timerID=setInterval(()=>{elapsed=Math.floor((Date.now()-startTime)/1000);const t=document.getElementById('timer-el');if(t)t.textContent=fmt(elapsed);},500);
+  renderQ();
+}
+
+function renderQ(){
+  const q=questions[cur];
+  const pct=Math.round((cur/PER_SESSION)*100);
+  const lbls=['A','B','C','D'];
+  document.getElementById('s-test').innerHTML=`
+    <div class="test-hdr">
+      <div class="hdr-row">
+        <span class="q-label">問題 ${cur+1} <span style="color:var(--text3)">/ ${PER_SESSION}</span></span>
+        <span class="timer" id="timer-el">${fmt(elapsed)}</span>
+      </div>
+      <div class="sub-row">
+        <span class="name-badge">${currentName}</span>
+        <span style="font-size:11px;color:var(--text3)">${q.cat}</span>
+      </div>
+      <div class="pbar"><div class="pfill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="q-card">
+      <span class="cat-badge">${q.cat}</span>
+      <p class="q-text">${q.text}</p>
+    </div>
+    <div class="opts" id="opts-area">
+      ${q.opts.map((o,i)=>`
+        <button class="opt" onclick="answer(${i})">
+          <span class="opt-lbl">${lbls[i]}</span>
+          <span style="flex:1">${o}</span>
+        </button>`).join('')}
+    </div>
+    <div id="expl-area"></div>`;
+}
+
+function answer(idx){
+  const q=questions[cur];
+  const pts=q.scores[idx];
+  totalScore+=pts;catScores[q.cat]=(catScores[q.cat]||0)+pts;
+  document.querySelectorAll('.opt').forEach((b,i)=>{b.classList.add('disabled');if(i===idx)b.classList.add('selected');});
+  // ★ 点数は非表示・解説のみ
+  document.getElementById('expl-area').innerHTML=`
+    <div class="expl">${q.exp}</div>
+    <div class="next-wrap">
+      <button class="btn-ghost" onclick="nextQ()">${cur+1<PER_SESSION?'次の問題へ →':'結果を見る →'}</button>
+    </div>`;
+}
+
+function nextQ(){
+  cur++;
+  if(cur>=PER_SESSION){clearInterval(timerID);elapsed=Math.floor((Date.now()-startTime)/1000);showResult();}
+  else renderQ();
+}
+
+function showResult(){
+  const eq=totalScore;
+  const lvl=LEVELS.find(l=>eq>=l.min)||LEVELS[LEVELS.length-1];
+  const catMax=CAT_PER*5;
+  const catResults=Object.entries(catScores).map(([cat,sc])=>({
+    cat,sc,pct:Math.round((sc/catMax)*100),
+    comment:sc/catMax>=0.8?CAT_COMMENTS[cat].hi:sc/catMax>=0.6?CAT_COMMENTS[cat].mid:CAT_COMMENTS[cat].lo
+  }));
+  const catBreakdown={};catResults.forEach(r=>{catBreakdown[r.cat]={score:r.sc,max:catMax,pct:r.pct};});
+  const record={testType:'AQ',name:currentName,eq,score:totalScore,maxScore:PER_SESSION*5,acc:Math.round((totalScore/(PER_SESSION*5))*100),secs:elapsed,level:lvl.label,date:new Date().toISOString(),catBreakdown};
+  saveResult(record);
+  sendToServer(record).then(ok=>{
+    const el=document.getElementById('save-status');
+    if(el)el.innerHTML=ok
+      ?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Googleスプレッドシートに送信しました'
+      :'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ローカルに保存（送信失敗）';
+  });
+  document.getElementById('s-result').innerHTML=`
+    <div class="card">
+      <div class="result-hero">
+        <p class="result-name">${currentName} さんの結果</p>
+        <div class="eq-ring"><span class="eq-lbl-sm">AQ</span><span class="eq-val">${eq}</span></div>
+        <h2 class="result-title">${lvl.label}</h2>
+        <p class="result-desc">${lvl.desc}</p>
+        <div id="save-status" class="save-notice">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          送信中...
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat-box"><div class="stat-n">${eq}</div><div class="stat-l">AQスコア（/100）</div></div>
+        <div class="stat-box"><div class="stat-n">${Math.round((totalScore/(PER_SESSION*5))*100)}%</div><div class="stat-l">達成率</div></div>
+        <div class="stat-box"><div class="stat-n">${fmt(elapsed)}</div><div class="stat-l">所要時間</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <p class="bkdn-ttl">カテゴリ別スコアと改善ポイント</p>
+      ${catResults.map(r=>`
+        <div class="cat-result">
+          <div class="cat-result-row">
+            <span class="cat-name">${r.cat}</span>
+            <span class="cat-pts">${r.sc}/${catMax}点（${r.pct}%）</span>
+          </div>
+          <div class="cat-bar-wrap"><div class="cat-bar-fill" style="width:${r.pct}%"></div></div>
+          <p class="cat-comment">${r.comment}</p>
+        </div>`).join('')}
+    </div>
+    <div class="retry-wrap">
+      <button class="btn-primary" onclick="startTest()">もう一度挑戦する（新しい20問）→</button>
+      <button class="btn-ghost" onclick="exportCSV()">結果をCSVでダウンロード</button>
+      <button class="btn-ghost" onclick="showIntro()">トップへ戻る</button>
+      <button class="btn-ghost" onclick="goToResults()">📊 結果をまとめて確認する →</button>
+    </div>
+    <p class="note-sm" style="margin-top:12px">※このテストは簡易的な目安です。正式な評価は専門家にご相談ください。<br>Created by S.O.Y</p>`;
+  show('s-result');
+}
+
+function goToResults(){
+  const name = currentName || localStorage.getItem('test_player_name') || '';
+  window.location.href = 'results.html' + (name ? '?name=' + encodeURIComponent(name) : '');
+}
+function exportCSV(){
+  const all=loadResults();if(!all.length){alert('まだ記録がありません。');return;}
+  const header='名前,AQスコア,達成率(%),所要時間(秒),レベル,実施日時';
+  const rows=all.map(r=>[`"${(r.name||'').replace(/"/g,'""')}"`,r.eq,r.acc,r.secs,`"${(r.level||'').replace(/"/g,'""')}"`,`"${fmtDate(r.date)}"`].join(','));
+  const csv='\uFEFF'+header+'\n'+rows.join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`AQテスト結果_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+showIntro();
+</script>
+</body>
+</html>

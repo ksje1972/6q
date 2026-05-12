@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6Q テスト結果</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f5f5f3;--bg3:#eeede9;
+  --text:#1a1a18;--text2:#6b6b66;--text3:#9a9a94;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+  --radius:10px;--radius-lg:14px;
+  --iq:#2563a8;--iq-bg:#eef3fb;--iq-bd:rgba(37,99,168,0.25);
+  --eq:#7c5cbf;--eq-bg:#f2eefb;--eq-bd:rgba(124,92,191,0.3);
+  --cq:#0F766E;--cq-bg:#CCFBF1;--cq-bd:rgba(15,118,110,0.3);
+  --aq:#C2500A;--aq-bg:#FFEDD5;--aq-bd:rgba(194,80,10,0.3);
+  --sq:#166534;--sq-bg:#DCFCE7;--sq-bd:rgba(22,101,52,0.3);
+  --rq:#9F1239;--rq-bg:#FFE4E6;--rq-bd:rgba(159,18,57,0.3);
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1c1a;--bg2:#252522;--bg3:#2e2e2b;
+  --text:#f0f0ec;--text2:#a0a09a;--text3:#686862;
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+  --iq:#7aaaff;--iq-bg:rgba(37,99,168,0.15);--iq-bd:rgba(122,170,255,0.35);
+  --eq:#a98be0;--eq-bg:rgba(124,92,191,0.15);--eq-bd:rgba(169,139,224,0.4);
+  --cq:#5EEAD4;--cq-bg:rgba(15,118,110,0.15);--cq-bd:rgba(94,234,212,0.4);
+  --aq:#FB923C;--aq-bg:rgba(194,80,10,0.15);--aq-bd:rgba(251,146,60,0.4);
+  --sq:#86EFAC;--sq-bg:rgba(22,101,52,0.15);--sq-bd:rgba(134,239,172,0.4);
+  --rq:#FDA4AF;--rq-bg:rgba(159,18,57,0.15);--rq-bd:rgba(253,164,175,0.4);
+}}
+body{
+  background:var(--bg3);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;
+  min-height:100vh;display:flex;align-items:flex-start;justify-content:center;
+  padding:24px 16px 60px;
+}
+.wrap{width:100%;max-width:520px;animation:fi .3s ease}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ヘッダー */
+.hero{display:flex;align-items:center;gap:12px;padding:0 2px 18px;
+  border-bottom:0.5px solid var(--border);margin-bottom:16px}
+.hero-logo{width:44px;height:44px;border-radius:10px;background:var(--text);
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.hero-name{font-size:17px;font-weight:700;color:var(--text);margin-bottom:2px}
+.hero-sub{font-size:11px;color:var(--text2)}
+
+/* カード */
+.card{background:var(--bg);border:0.5px solid var(--border);
+  border-radius:var(--radius-lg);padding:24px;margin-bottom:12px}
+.card-title{font-size:13px;font-weight:600;color:var(--text2);
+  letter-spacing:.5px;margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.card-title::before{content:'';display:block;width:3px;height:14px;
+  border-radius:2px;background:var(--text3)}
+
+/* レーダーチャート */
+.radar-wrap{position:relative;width:100%;max-width:320px;margin:0 auto}
+
+/* 未受験バナー */
+.incomplete-banner{
+  background:var(--bg2);border:0.5px solid var(--border);
+  border-radius:var(--radius);padding:10px 14px;
+  font-size:11px;color:var(--text3);text-align:center;
+  margin-bottom:14px;line-height:1.7;
+}
+.incomplete-banner b{color:var(--text2);font-weight:600}
+
+/* スコアリスト */
+.score-list{display:flex;flex-direction:column;gap:8px}
+.score-item{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;border-radius:var(--radius);
+  border:0.5px solid var(--border);background:var(--bg2);
+}
+.score-item.done{background:var(--bg)}
+.score-icon{font-size:22px;width:32px;text-align:center;flex-shrink:0}
+.score-body{flex:1;min-width:0}
+.score-head{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.score-qname{font-size:14px;font-weight:700}
+.score-badge{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:500}
+.score-variant{font-size:10px;color:var(--text3);background:var(--bg2);
+  border:0.5px solid var(--border);padding:1px 7px;border-radius:100px;}
+.score-level{font-size:12px;color:var(--text2)}
+.score-date{font-size:11px;color:var(--text3);margin-top:2px}
+.score-right{text-align:right;flex-shrink:0}
+.score-val{font-size:22px;font-weight:700;line-height:1}
+.score-max{font-size:11px;color:var(--text3)}
+.score-pct{font-size:12px;color:var(--text2)}
+
+/* バー */
+.bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;transition:width .6s ease}
+
+/* 未受験 */
+.score-item.pending .score-qname{color:var(--text3)}
+.score-item.pending .score-icon{opacity:.4}
+.score-item.pending .score-val{color:var(--text3);font-size:18px}
+.pending-lbl{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* カラー設定 */
+.iq-color{color:var(--iq)}.iq-bg{background:var(--iq-bg);color:var(--iq);border:0.5px solid var(--iq-bd)}
+.eq-color{color:var(--eq)}.eq-bg{background:var(--eq-bg);color:var(--eq);border:0.5px solid var(--eq-bd)}
+.cq-color{color:var(--cq)}.cq-bg{background:var(--cq-bg);color:var(--cq);border:0.5px solid var(--cq-bd)}
+.aq-color{color:var(--aq)}.aq-bg{background:var(--aq-bg);color:var(--aq);border:0.5px solid var(--aq-bd)}
+.sq-color{color:var(--sq)}.sq-bg{background:var(--sq-bg);color:var(--sq);border:0.5px solid var(--sq-bd)}
+.rq-color{color:var(--rq)}.rq-bg{background:var(--rq-bg);color:var(--rq);border:0.5px solid var(--rq-bd)}
+
+/* フッター */
+.footer-btns{display:flex;gap:8px;margin-top:4px}
+.btn-ghost{flex:1;padding:13px;background:var(--bg);color:var(--text);
+  border:0.5px solid var(--border2);border-radius:var(--radius);
+  font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;
+  transition:background .15s;text-decoration:none;text-align:center;display:block}
+.btn-ghost:hover{background:var(--bg2)}
+.note{font-size:11px;color:var(--text3);text-align:center;
+  line-height:1.8;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <p style="color:var(--text3);text-align:center;padding-top:40px">読み込み中...</p>
+</div>
+
+<script>
+// ── データ定義 ─────────────────────────────────────
+const TESTS = [
+  {key:'IQ',  storageKey:'iq_test_results_v1',   icon:'🧮', label:'IQ',  variant:null,    colorClass:'iq', maxScore:60, useAcc:true},
+  {key:'EQ',  storageKey:'eq_test_results_v3',   icon:'❤️', label:'EQ',  variant:null,    colorClass:'eq', maxScore:100},
+  {key:'CQ',  storageKey:'cq_test_results_v1',   icon:'🌏', label:'CQ',  variant:'国際版', colorClass:'cq', maxScore:100},
+  {key:'CQD', storageKey:'cq_dom_test_results_v1',icon:'🏢',label:'CQ',  variant:'国内版', colorClass:'cq', maxScore:100},
+  {key:'SQ',  storageKey:'sq_test_results_v1',   icon:'🤝', label:'SQ',  variant:null,    colorClass:'sq', maxScore:100},
+  {key:'AQ',  storageKey:'aq_test_results_v1',   icon:'⛰️', label:'AQ',  variant:null,    colorClass:'aq', maxScore:100},
+  {key:'RQ',  storageKey:'rq_test_results_v1',   icon:'🌱', label:'RQ',  variant:null,    colorClass:'rq', maxScore:100},
+];
+
+// ── ユーティリティ ──────────────────────────────────
+function loadResults(storageKey){
+  try{ return JSON.parse(localStorage.getItem(storageKey)||'[]'); }catch{ return []; }
+}
+function fmtDate(iso){
+  const d = new Date(iso);
+  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+}
+function toPercent(score, maxScore){
+  return Math.round((score / maxScore) * 100);
+}
+// CSS変数の実際の色を取得（レーダー用）
+function getCSSColor(varName){
+  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+}
+
+// ── メイン描画 ─────────────────────────────────────
+function render(){
+  // 名前取得
+  const urlName = new URLSearchParams(window.location.search).get('name') || '';
+  const savedName = localStorage.getItem('test_player_name') || localStorage.getItem('test_last_name') || '';
+  const name = urlName || savedName || '名前未設定';
+
+  // 各テストの最新結果を取得
+  const results = {};
+  TESTS.forEach(t => {
+    const all = loadResults(t.storageKey);
+    // 名前で絞り込み（名前が設定されている場合）
+    const filtered = savedName
+      ? all.filter(r => r.name === (urlName || savedName))
+      : all;
+    const latest = filtered.length > 0 ? filtered[filtered.length - 1] : null;
+    results[t.key] = latest;
+  });
+
+  // CQ: 国際版・国内版どちらか（または両方）
+  const hasCQ  = !!results['CQ'];
+  const hasCQD = !!results['CQD'];
+
+  // レーダー用: 表示するテスト（CQは両方あれば両方、片方のみでもOK）
+  // レーダー軸: IQ / EQ / CQ(国際 or 国内 or 平均) / SQ / AQ / RQ
+  // CQが両方ある場合はスコアの高い方か平均を使う → 高い方を採用
+  let cqForRadar = null;
+  if(hasCQ && hasCQD){
+    const cqPct  = toPercent(results['CQ'].score,  100);
+    const cqdPct = toPercent(results['CQD'].score, 100);
+    cqForRadar = Math.max(cqPct, cqdPct);
+  } else if(hasCQ){
+    cqForRadar = toPercent(results['CQ'].score, 100);
+  } else if(hasCQD){
+    cqForRadar = toPercent(results['CQD'].score, 100);
+  }
+
+  const radarTests = [
+    {label:'IQ', pct: results['IQ'] ? (results['IQ'].acc ?? toPercent(results['IQ'].score, 60)) : null, color:'--iq'},
+    {label:'EQ', pct: results['EQ'] ? toPercent(results['EQ'].score, 100) : null, color:'--eq'},
+    {label:'CQ', pct: cqForRadar, color:'--cq'},
+    {label:'SQ', pct: results['SQ'] ? toPercent(results['SQ'].score, 100) : null, color:'--sq'},
+    {label:'RQ', pct: results['RQ'] ? toPercent(results['RQ'].score, 100) : null, color:'--rq'},
+    {label:'AQ', pct: results['AQ'] ? toPercent(results['AQ'].score, 100) : null, color:'--aq'},
+  ];
+
+  const doneCount = radarTests.filter(t => t.pct !== null).length;
+  const totalQ = (hasCQ && hasCQD) ? 7 : 6;
+  const takenCount = TESTS.filter(t => results[t.key]).length;
+
+  // ── HTML生成 ──────────────────────────────────────
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="hero">
+      <div class="hero-logo">🧠</div>
+      <div>
+        <div class="hero-name">${name} さんの結果</div>
+        <div class="hero-sub">${takenCount} / ${totalQ} テスト完了</div>
+      </div>
+    </div>
+
+    <!-- レーダーチャート -->
+    <div class="card">
+      <div class="card-title">6Q レーダーチャート</div>
+      ${doneCount < 2
+        ? `<p style="font-size:13px;color:var(--text3);text-align:center;padding:20px 0">
+            2つ以上のテストを受けるとレーダーチャートが表示されます
+           </p>`
+        : `<div class="radar-wrap"><canvas id="radarChart"></canvas></div>`
+      }
+    </div>
+
+    <!-- スコア一覧 -->
+    <div class="card">
+      <div class="card-title">スコア一覧</div>
+      ${doneCount < totalQ
+        ? `<div class="incomplete-banner">
+            <b>未受験のテストがあります</b><br>
+            すべて受けるとレーダーチャートが完成します
+           </div>`
+        : ''
+      }
+      <div class="score-list" id="scoreList"></div>
+    </div>
+
+    <div class="footer-btns">
+      <a class="btn-ghost" href="index.html${savedName ? '?name='+encodeURIComponent(savedName) : ''}">← テスト一覧へ戻る</a>
+    </div>
+    <p class="note">このテストは簡易的な目安です。<br>Created by S.O.Y</p>
+  `;
+
+  // ── スコア一覧の描画 ─────────────────────────────
+  const scoreList = document.getElementById('scoreList');
+  const rows = [];
+
+  TESTS.forEach(t => {
+    const r = results[t.key];
+    const pct = r ? (t.useAcc ? (r.acc ?? toPercent(r.score, t.maxScore)) : toPercent(r.score, t.maxScore)) : null;
+    const isDone = !!r;
+
+    rows.push(`
+      <div class="score-item ${isDone ? 'done' : 'pending'}">
+        <div class="score-icon">${t.icon}</div>
+        <div class="score-body">
+          <div class="score-head">
+            <span class="score-qname ${isDone ? t.colorClass+'-color' : ''}">${t.label}</span>
+            ${t.variant ? `<span class="score-badge ${isDone ? t.colorClass+'-bg' : ''}">${t.variant}</span>` : ''}
+            ${isDone ? `<span class="score-badge ${t.colorClass}-bg">${r.level}</span>` : ''}
+          </div>
+          ${isDone
+            ? `<div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:var(--${t.colorClass})"></div></div>
+               <div class="score-date">${fmtDate(r.date)} 受験</div>`
+            : `<div class="pending-lbl">未受験</div>`
+          }
+        </div>
+        <div class="score-right">
+          ${isDone
+            ? `<div class="score-val ${t.colorClass}-color">${pct}</div>
+               <div class="score-max">${t.useAcc ? '正答率(%)' : '/ 100点'}</div>
+               ${t.useAcc && r.iq ? `<div style="font-size:10px;color:var(--text3);margin-top:1px">IQ換算 ${r.iq}</div>` : ''}`
+            : `<div class="score-val">—</div>`
+          }
+        </div>
+      </div>
+    `);
+  });
+
+  scoreList.innerHTML = rows.join('');
+
+  // ── レーダーチャート描画 ─────────────────────────
+  if(doneCount >= 2){
+    const isDark = window.matchMedia('(prefers-color-scheme:dark)').matches;
+    const labels = radarTests.map(t => t.label);
+    const data   = radarTests.map(t => t.pct ?? 0);
+    const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
+    const tickColor = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.25)';
+    const labelColor= isDark ? '#a0a09a' : '#6b6b66';
+
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels,
+        datasets:[{
+          data,
+          backgroundColor: 'rgba(15,118,110,0.15)',
+          borderColor:     'rgba(15,118,110,0.8)',
+          borderWidth: 2,
+          pointBackgroundColor: radarTests.map(t => {
+            const map = {'--iq':'#2563a8','--eq':'#7c5cbf','--cq':'#0F766E',
+                         '--sq':'#166534','--rq':'#9F1239','--aq':'#C2500A'};
+            return t.pct !== null ? (map[t.color] || '#0F766E') : (isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)');
+          }),
+          pointRadius: radarTests.map(t => t.pct !== null ? 5 : 3),
+          pointHoverRadius: radarTests.map(t => t.pct !== null ? 7 : 3),
+        }]
+      },
+      options:{
+        responsive:true,
+        scales:{
+          r:{
+            min:0, max:100,
+            ticks:{
+              stepSize:25,
+              color: tickColor,
+              backdropColor:'transparent',
+              font:{size:10}
+            },
+            grid:{color: gridColor},
+            angleLines:{color: gridColor},
+            pointLabels:{
+              font:{size:13,weight:'700'},
+              color: labelColor,
+            }
+          }
+        },
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            callbacks:{
+              label: ctx => ` ${ctx.raw}点`
+            }
+          }
+        }
+      }
+    });
+  }
+}
+
+render();
+</script>
+</body>
+</html>

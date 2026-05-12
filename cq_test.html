@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CQテスト（文化的知性テスト）</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f5f5f3;--bg3:#eeede9;
+  --text:#1a1a18;--text2:#6b6b66;--text3:#9a9a94;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+  --accent:#0F766E;--accent-bg:#CCFBF1;--accent-border:rgba(15,118,110,0.3);
+  --success:#2d7a3a;--success-bg:#eef6f0;--success-border:rgba(45,122,58,0.3);
+  --info-bg:#eef3fb;--info-border:rgba(40,80,160,0.25);--info:#1a4fa0;
+  --radius:10px;--radius-lg:14px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1c1a;--bg2:#252522;--bg3:#2e2e2b;
+  --text:#f0f0ec;--text2:#a0a09a;--text3:#686862;
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+  --accent:#5EEAD4;--accent-bg:rgba(15,118,110,0.15);--accent-border:rgba(94,234,212,0.4);
+  --success:#4caf60;--success-bg:rgba(76,175,96,0.12);--success-border:rgba(76,175,96,0.35);
+  --info-bg:rgba(60,100,200,0.12);--info-border:rgba(100,150,255,0.3);--info:#7aaaff;
+}}
+body{background:var(--bg3);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;
+  min-height:100vh;display:flex;align-items:flex-start;justify-content:center;
+  padding:24px 16px 60px}
+#app{width:100%;max-width:560px}
+.screen{animation:fi .28s ease}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* カード */
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin-bottom:12px}
+.card-sm{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:12px}
+
+/* イントロ ヘッダー */
+.intro-header{display:flex;align-items:center;gap:14px;padding-bottom:18px;
+  border-bottom:0.5px solid var(--border);margin-bottom:20px}
+.intro-logo{width:52px;height:52px;border-radius:50%;background:var(--accent-bg);
+  border:0.5px solid var(--accent-border);display:flex;align-items:center;
+  justify-content:center;font-size:26px;flex-shrink:0}
+.intro-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:3px}
+.intro-sub{font-size:11px;color:var(--accent);font-weight:500;letter-spacing:.4px}
+
+/* メタグリッド */
+.meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.meta-box{background:var(--bg2);border-radius:var(--radius);padding:12px 8px;text-align:center}
+.meta-n{font-size:18px;font-weight:700;color:var(--accent)}.meta-l{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* カテゴリピル */
+.cats-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.cat-pill{font-size:11px;padding:3px 10px;border-radius:100px;
+  background:var(--accent-bg);color:var(--accent);border:0.5px solid var(--accent-border)}
+
+/* 注意書き */
+.notice-box{background:var(--accent-bg);border:0.5px solid var(--accent-border);
+  border-radius:var(--radius);padding:12px 14px;font-size:12px;color:var(--accent);
+  margin-bottom:18px;line-height:1.75}
+
+/* 名前入力 */
+.name-section{margin-bottom:16px}
+.name-row-input{display:flex;align-items:center;gap:10px;padding:11px 14px;
+  border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg2)}
+.name-row-input:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.name-label{font-size:12px;color:var(--text2);white-space:nowrap;flex-shrink:0}
+.name-input{flex:1;border:none;outline:none;font-size:15px;background:transparent;
+  color:var(--text);font-family:inherit}
+.name-input::placeholder{color:var(--text3)}
+.name-error{font-size:12px;color:#c0392b;margin-top:6px;display:none}
+
+/* ボタン */
+.btn-primary{display:block;width:100%;padding:14px;background:var(--accent);color:#fff;
+  border:none;border-radius:var(--radius);font-size:14px;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:opacity .15s}
+.btn-primary:hover{opacity:.85}.btn-primary:active{transform:scale(.98)}
+.btn-ghost{display:block;width:100%;padding:12px;background:var(--bg);color:var(--text);
+  border:0.5px solid var(--border2);border-radius:var(--radius);font-size:14px;
+  font-weight:500;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-ghost:hover{background:var(--bg2)}.btn-ghost:active{transform:scale(.98)}
+.btn-sm{padding:5px 10px;background:var(--bg);color:var(--text2);
+  border:0.5px solid var(--border2);border-radius:var(--radius);
+  font-size:11px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.btn-sm:hover{background:var(--bg2)}
+
+/* 履歴 */
+.hist-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.hist-ttl{font-size:12px;font-weight:500;color:var(--text2)}
+.hist-item{display:flex;align-items:center;gap:10px;padding:10px 0;
+  border-bottom:0.5px solid var(--border);font-size:13px}
+.hist-item:last-child{border-bottom:none}
+.hist-eq{font-size:18px;font-weight:700;color:var(--accent);min-width:36px}
+.hist-meta{flex:1;min-width:0}
+.hist-name{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-date{font-size:11px;color:var(--text3);margin-top:1px}
+.hist-score{font-size:12px;color:var(--text2);text-align:right;white-space:nowrap;flex-shrink:0}
+.hist-empty{font-size:13px;color:var(--text3);padding:12px 0;text-align:center}
+
+/* テスト画面 */
+.test-hdr{margin-bottom:14px}
+.hdr-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.q-label{font-size:13px;color:var(--text2)}
+.timer{font-size:12px;font-variant-numeric:tabular-nums;color:var(--text2);
+  background:var(--bg2);padding:3px 10px;border-radius:100px;border:0.5px solid var(--border)}
+.sub-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.name-badge{font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.pbar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:2px}
+.pfill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease}
+
+/* 問題カード */
+.q-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:10px}
+.cat-badge{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;
+  font-weight:500;margin-bottom:10px;background:var(--accent-bg);
+  color:var(--accent);border:0.5px solid var(--accent-border)}
+.q-text{font-size:15px;line-height:1.85;white-space:pre-line;color:var(--text)}
+.opts{display:grid;gap:7px;margin-bottom:8px}
+.opt{text-align:left;padding:12px 14px;background:var(--bg);border:0.5px solid var(--border);
+  border-radius:var(--radius);font-size:14px;cursor:pointer;color:var(--text);
+  display:flex;align-items:flex-start;gap:11px;font-family:inherit;
+  transition:background .12s,border-color .12s;width:100%;line-height:1.6}
+.opt:hover:not(.disabled){background:var(--accent-bg);border-color:var(--accent-border)}
+.opt.selected{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent)}
+.opt.disabled{cursor:default;pointer-events:none}
+.opt-lbl{width:24px;height:24px;border-radius:50%;border:0.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;
+  flex-shrink:0;background:var(--bg2);color:var(--text2);margin-top:1px}
+.opt.selected .opt-lbl{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent)}
+.expl{font-size:13px;padding:11px 14px;background:var(--accent-bg);
+  border:0.5px solid var(--accent-border);border-radius:var(--radius);
+  margin-top:8px;color:var(--accent);line-height:1.7;animation:fi .2s ease}
+.next-wrap{margin-top:8px}
+
+/* 結果画面 */
+.result-hero{text-align:center;padding:20px 0 16px}
+.result-name{font-size:13px;color:var(--text2);margin-bottom:10px}
+.eq-ring{width:136px;height:136px;border-radius:50%;border:2.5px solid var(--accent);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin:0 auto 12px;background:var(--bg2)}
+.eq-lbl-sm{font-size:10px;color:var(--text2);letter-spacing:.5px;margin-bottom:2px}
+.eq-val{font-size:46px;font-weight:700;color:var(--accent);line-height:1}
+.result-title{font-size:20px;font-weight:700;margin-bottom:8px}
+.result-desc{font-size:13px;color:var(--text2);line-height:1.75;max-width:380px;margin:0 auto}
+.save-notice{display:flex;align-items:center;gap:8px;font-size:11px;padding:9px 12px;
+  background:var(--info-bg);border:0.5px solid var(--info-border);
+  border-radius:var(--radius);color:var(--info);margin-top:12px}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.stat-box{background:var(--bg2);border-radius:var(--radius);padding:12px;text-align:center}
+.stat-n{font-size:20px;font-weight:700;color:var(--accent)}
+.stat-l{font-size:10px;color:var(--text3);margin-top:2px}
+.bkdn-ttl{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;
+  letter-spacing:.3px;text-transform:uppercase}
+.cat-result{padding:11px 0;border-bottom:0.5px solid var(--border)}
+.cat-result:last-child{border-bottom:none}
+.cat-result-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.cat-name{font-size:13px;font-weight:500;flex:1}
+.cat-pts{font-size:12px;color:var(--accent);font-weight:600;white-space:nowrap}
+.cat-bar-wrap{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.cat-bar-fill{height:100%;background:var(--accent);border-radius:3px}
+.cat-comment{font-size:12px;color:var(--text3);margin-top:5px;line-height:1.6}
+.retry-wrap{display:grid;gap:8px}
+.note-sm{font-size:11px;color:var(--text3);text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="s-intro" class="screen"></div>
+  <div id="s-test"  class="screen" style="display:none"></div>
+  <div id="s-result" class="screen" style="display:none"></div>
+</div>
+<script>
+// ═══════════════════════════════════════════════════════════
+//  問題バンク（100問）
+//
+//  設計方針：
+//  ・4択すべてが「普通の人が選びそうな行動」として書く
+//  ・EQの落とし穴を仕込む
+//    例）「いつもポジティブでいる」→感情抑圧で低スコア
+//       「相手のために我慢する」→自己管理ではなく回避
+//       「すぐ謝る」→反射的謝罪は自己認識の欠如
+//       「共感してあげる」→主語が「あげる」は上から目線
+//  ・点数差は微妙にする（5-4-3-2 でなく 5-4-4-3 も多用）
+//  ・正解が「地味で当たり前」に見えるものを多く含める
+// ═══════════════════════════════════════════════════════════
+const BANK=[{"cat": "CQ Drive", "text": "外国人の同僚と初めて仕事することになった。\n率直なあなたの心境は？", "opts": ["「英語頑張らないと」と気が引き締まる", "「どんな考え方の人だろう」と興味が湧く", "「やるしかない」と覚悟する", "「うまくいくか」と少し不安になる"], "scores": [3, 5, 3, 3], "exp": "異文化との関わりで「言語」より「相手の世界観」に関心が向くことがCQ Driveの本質です。"}, {"cat": "CQ Drive", "text": "海外出張で、地元の人にしか行かないような店に\n誘われた。どう感じる？", "opts": ["せっかくの機会なので積極的に行く", "お腹を壊さないか少し心配だが行く", "観光客向けの店の方が安心だと感じる", "相手の好意なので断れず行く"], "scores": [5, 4, 2, 3], "exp": "「文化を体験できるチャンス」として捉えるか、「リスク」として捉えるかにCQ Driveが現れます。"}, {"cat": "CQ Drive", "text": "会社が異文化研修を任意参加で実施する。\nあなたの行動は？", "opts": ["業務優先度を見つつ参加を検討する", "参加して学びたい", "評価につながるなら参加する", "必要性を感じれば参加する"], "scores": [3, 5, 2, 3], "exp": "「評価のため」「必要性が見えれば」では外発的動機にとどまります。学びそのものへの関心がCQ Driveです。"}, {"cat": "CQ Drive", "text": "異文化の同僚との会議が文化的な行き違いで難航した。\n会議後、どう過ごす？", "opts": ["「次はどう改善するか」を一人で考える", "「なぜそうなったか」を文化的観点から調べてみる", "気持ちを切り替えて他の業務に戻る", "信頼できる人に状況を相談する"], "scores": [4, 5, 2, 4], "exp": "困難な経験を「文化的観点で深く学ぶ機会」として活かすことがCQ Driveの持続力です。"}, {"cat": "CQ Drive", "text": "異文化交流のイベント（仕事と無関係）に誘われた。\n土曜の予定は空いている。", "opts": ["仕事以外で時間を使うのは贅沢だと感じる", "面白そうなので参加する", "興味はあるが、人見知りなので迷う", "誘ってくれた人への義理で参加する"], "scores": [3, 5, 3, 2], "exp": "純粋な好奇心からの参加が CQ Driveの内発的動機を最も強く示します。"}, {"cat": "CQ Drive", "text": "異文化の習慣が自分の価値観と衝突した時、\n最初に湧く感覚は？", "opts": ["「なぜそういう習慣ができたんだろう」と興味", "「違うのは仕方ない」と受け止める", "「自分の価値観の方が合理的」と感じる", "「適応しないといけない」と気を引き締める"], "scores": [5, 3, 2, 3], "exp": "違和感を感じた時の最初の反応が「興味」か「判断」かにCQ Driveの根の深さが現れます。"}, {"cat": "CQ Drive", "text": "外国語学習について、本音はどう感じている？", "opts": ["翻訳ツールがあれば最低限で十分", "学べば仕事の幅が広がるので投資", "話せると相手の考え方の理解が深まる", "興味はあるが時間がない"], "scores": [2, 4, 5, 3], "exp": "言語を「文化理解の入口」として捉える視点がCQ Driveの深さを示します。"}, {"cat": "CQ Drive", "text": "普段、海外のニュース・文化・人物について\n自分から調べることはあるか？", "opts": ["興味のあるトピックは追っている", "必要に迫られた時のみ調べる", "話題になっていれば一応見る", "ほとんど自分から調べない"], "scores": [5, 3, 3, 2], "exp": "自発的・継続的な情報接触がCQ Driveの日常的な表れです。"}, {"cat": "CQ Drive", "text": "外国の映画・本・音楽に普段触れているか？", "opts": ["好きな作品があり、文化への興味も深まる", "話題になったものは見聞きする", "日本のものを好む", "あまり触れない"], "scores": [5, 3, 3, 2], "exp": "異文化のコンテンツを楽しめることはCQ Driveの自然な表れです。ただし「話題で見る」だけでは表層的です。"}, {"cat": "CQ Drive", "text": "初めて訪れた国で、価値観の違いを強く感じた。\nその夜、宿で何を考える？", "opts": ["「日本だとこうなのに」と比較して整理する", "「面白いな、なぜだろう」とワクワクする", "「合わない国だな」と感じる", "「明日はうまく対応しよう」と備える"], "scores": [3, 5, 2, 4], "exp": "違いに対して「比較」よりも「面白さ」を感じられることがCQ Driveの探究心です。"}, {"cat": "CQ Drive", "text": "異文化コミュニケーションで失敗した時、\nその経験をどう扱う？", "opts": ["反省してすぐに切り替える", "「学びの機会」として深く振り返る", "次回は同じ失敗をしないよう備える", "信頼できる人に話して整理する"], "scores": [3, 5, 4, 4], "exp": "失敗を「内省と学習の素材」にする姿勢がCQ Driveの成長志向です。「切り替える」だけでは学習が浅くなります。"}, {"cat": "CQ Drive", "text": "多文化チームのリーダーを任されそうな話が出た。\n率直な気持ちは？", "opts": ["責任の重さを感じつつ、挑戦したい", "多様な視点で動かせるのが楽しみ", "自信はないが断りにくい", "条件次第で考える"], "scores": [4, 5, 2, 3], "exp": "多文化リーダーシップを「楽しみ」と感じられることがCQ Driveの最も前向きな表れです。"}, {"cat": "CQ Drive", "text": "あなたの友人・知人の中で、\n外国人との関係はどうか？", "opts": ["仲の良い友人がいて頻繁に交流する", "知り合いはいるが深い関係ではない", "仕事の関係でのみ会う", "ほとんど関わりがない"], "scores": [5, 3, 3, 2], "exp": "プライベートでの異文化交流の有無がCQ Driveの実生活への定着を示します。"}, {"cat": "CQ Drive", "text": "異文化の人の考え方が理解できなかった。\n次にどうする？", "opts": ["「合わない人だ」と距離を置く", "「もう少し話して理解したい」と思う", "「自分の考え方の方が筋が通っている」と感じる", "とりあえず尊重する姿勢を取る"], "scores": [2, 5, 2, 3], "exp": "理解できない時こそ「もっと知りたい」と思える動機がCQ Driveの深さの証です。"}, {"cat": "CQ Drive", "text": "海外赴任の打診があった。\n家族・生活への影響を脇に置いた本音は？", "opts": ["新しい挑戦としてワクワクする", "条件が良ければ前向きに考える", "できれば国内にいたい", "必要性次第で判断する"], "scores": [5, 3, 2, 3], "exp": "海外経験への「ワクワク感」が国際的な動機の最も直接的な指標です。"}, {"cat": "CQ Drive", "text": "異文化背景の人の話を聞くとき、\n意識的に何をしている？", "opts": ["内容をきちんと理解しようとする", "失礼にならないよう気を遣う", "その人の世界観を知ろうとする", "共通点を見つけようとする"], "scores": [3, 3, 5, 4], "exp": "「世界観を知る」という関心が表面的な情報処理を超えたCQ Driveの深さです。"}, {"cat": "CQ Drive", "text": "文化の違いから誤解が生じた時、\n誰の問題と捉える？", "opts": ["お互いの責任", "自分が理解不足だった部分を振り返る", "状況的に避けにくかった", "主に相手の側に問題があった"], "scores": [4, 5, 3, 2], "exp": "「自分の理解不足」を最初に振り返る姿勢が成長志向のCQ Driveです。「お互い」は無難ですが学びは限定的です。"}, {"cat": "CQ Drive", "text": "異文化を学ぶこと自体に、\nどれくらいの楽しさを感じる？", "opts": ["興味深いトピックなら楽しい", "世界が広がる感覚があり、純粋に楽しい", "役立つので意味は感じる", "正直、楽しさは特に感じない"], "scores": [3, 5, 3, 2], "exp": "「世界が広がる」という感覚をベースにした内発的な楽しさがCQ Driveの最も持続的な源泉です。"}, {"cat": "CQ Drive", "text": "重要な異文化の場面の前、\nどれくらい準備する？", "opts": ["相手国の文化・慣習を事前に調べる", "基本的なマナーを確認する", "当日対応すれば良いと思う", "相手が日本に合わせてくれるはず"], "scores": [5, 3, 2, 1], "exp": "事前準備の積極性がCQ Driveの行動的な現れです。「相手が合わせる」前提は動機の欠如を示します。"}, {"cat": "CQ Drive", "text": "異文化での失敗談を他人から聞いた時、\nどう受け取る？", "opts": ["「自分も気をつけよう」と備える", "「面白い話だ」と楽しむ", "「自分は同じ失敗をしないようにしよう」と気を引き締める", "「相手の文化が難しいんだな」と感じる"], "scores": [4, 3, 4, 2], "exp": "他者の経験から学ぼうとする姿勢がCQ Driveの学習志向です。「文化が難しい」と相手側に問題を帰すと学びが浅くなります。"}, {"cat": "CQ Drive", "text": "文化的に敏感な話題（宗教・政治など）に\n対話の中で触れる機会があった。", "opts": ["慎重に避ける", "興味があれば慎重に踏み込む", "相手から話せば応じる", "事前に避けるべき話題と決めておく"], "scores": [3, 5, 4, 2], "exp": "敏感な話題でも「慎重さ＋興味」を持って向き合えることがCQ Driveの成熟さです。完全に避けると深い理解は生まれません。"}, {"cat": "CQ Drive", "text": "異文化の祭り・行事に参加できる機会があった。\n参加形態の好みは？", "opts": ["観察者として静かに見る", "現地の人と一緒に体験する", "写真を撮りに行く", "誘われたら参加する"], "scores": [3, 5, 2, 3], "exp": "観察ではなく「体験」を選ぶ姿勢がCQ Driveの参加志向です。"}, {"cat": "CQ Drive", "text": "「文化の違い」というテーマについて、\n本音はどう感じている？", "opts": ["お互い学べる豊かさの源", "摩擦の原因になりがち", "尊重すべきだが扱いは難しい", "乗り越えるべき障壁"], "scores": [5, 2, 3, 2], "exp": "違いを「豊かさ」と捉えるフレームがCQ Driveの根本にあります。「障壁」は文化を問題視する見方です。"}, {"cat": "CQ Drive", "text": "グローバルな出来事（紛争・経済・社会変化など）への関心は？", "opts": ["世界の動きを自分ごととしてフォローしている", "ニュースで知る程度", "日本に影響がある範囲で", "あまり関心がない"], "scores": [5, 3, 3, 2], "exp": "グローバルな出来事を「自分ごと」として捉えられる視野の広さがCQ Driveです。"}, {"cat": "CQ Drive", "text": "自分の文化的偏見に気づいた時、\nどう向き合うか？", "opts": ["気づいたら意識的に修正する", "誰にでもあるものと受け止める", "気にしすぎないようにする", "自分には強い偏見はないと思う"], "scores": [5, 3, 3, 2], "exp": "バイアスへの「気づき＋修正」の継続的な姿勢がCQ Driveの誠実さです。「ない」と感じるのは認識不足です。"}, {"cat": "CQ Knowledge", "text": "高権力距離文化（韓国・中国など）の上司との会議で、\n部下が積極的に意見を述べる場面が少ない。最も妥当な解釈は？", "opts": ["部下のやる気の問題", "ミーティングの設計が悪い", "上司への敬意を示す文化的規範", "部下が議題を理解していない"], "scores": [2, 3, 5, 2], "exp": "高権力距離文化では公の場での上司への異論は「無礼」とされます。Hofstede理論の権力格差次元の理解が問われます。"}, {"cat": "CQ Knowledge", "text": "アメリカ人の同僚と会議。\n意見を求めると常に断定的な発言が返ってくる。これは？", "opts": ["自信過剰な性格", "個人主義文化での標準的な振る舞い", "訓練された専門家の証", "日本人とは合わないタイプ"], "scores": [2, 5, 3, 1], "exp": "個人主義文化（米英など）では明確な意見表明が期待され、曖昧な表現は逆に評価が下がります。文化的規範の理解が必要です。"}, {"cat": "CQ Knowledge", "text": "インドネシアのパートナーから「Yes, but...」と返事が来た。\nこれを最も適切に解釈すると？", "opts": ["条件付きの同意", "実質的な拒絶の婉曲表現", "検討中で結論待ち", "自分の説明が不十分"], "scores": [2, 5, 3, 3], "exp": "高コンテキスト文化では「No」を直接言わず、「Yes, but...」「difficult」「we'll try」などが拒絶の婉曲表現として使われます。"}, {"cat": "CQ Knowledge", "text": "ブラジルのチームと会議の予定を組む。\n相手は「14:00頃」と言った。最も適切な準備は？", "opts": ["13:55に到着して待機", "14:00ちょうどを目指す", "14:15-14:30の遅延を見込む", "相手に正確な時刻を確認する"], "scores": [3, 3, 5, 3], "exp": "ラテン文化（多線的時間文化）では「頃」は実際に幅を持ち、15-30分の遅れは普通です。文化的時間感覚の理解が必要です。"}, {"cat": "CQ Knowledge", "text": "中東のクライアントと初対面の挨拶。\n最も信頼関係に貢献する話題は？", "opts": ["業務の概要説明", "相手の家族や故郷", "共通の知人の話題", "業界トレンド"], "scores": [2, 5, 4, 3], "exp": "アラブ・中東文化では関係構築（特に家族の話）が信頼の基礎で、ビジネスはその後に来ます。タスク優先文化との大きな違いです。"}, {"cat": "CQ Knowledge", "text": "中国のビジネス会食で、ホストが何度も乾杯を促す。\n最も適切な対応は？", "opts": ["ペースを抑えて少しずつ飲む", "相手のペースに合わせる", "健康上の理由で丁重に断る", "水で代用する"], "scores": [3, 5, 4, 3], "exp": "中国の会食文化では「乾杯（ガンベイ）」は関係構築の重要な儀式です。完全に断ると関係が浅いとみなされる場合があります。"}, {"cat": "CQ Knowledge", "text": "日本人の同僚が韓国の取引先に\n白い花のアレンジメントを贈ろうとしている。\nアドバイスとして最も適切なのは？", "opts": ["問題ない、好意は伝わる", "白は弔事を連想させるので避ける", "赤系の色を勧める", "花より食品が無難と伝える"], "scores": [1, 5, 4, 3], "exp": "韓国・中国では白い花は葬儀を強く連想させます。色彩の文化的意味の知識がCQ Knowledgeの基礎です。"}, {"cat": "CQ Knowledge", "text": "フランス人のクライアントと商談中、\n相手があなたの提案に強く反論してきた。これは？", "opts": ["商談決裂のサイン", "知的な議論を楽しんでいる", "個人的な反感", "提案の質への不満"], "scores": [2, 5, 2, 3], "exp": "フランス文化では議論（ディベート）は知的交流であり、反論は関心の表れです。日本人が誤解しやすい文化的特徴です。"}, {"cat": "CQ Knowledge", "text": "ドイツの会議で、相手から細かい計画と数字を要求された。\nこれを最も妥当に解釈すると？", "opts": ["相手が日本人を信頼していない", "ドイツ文化での標準的な期待", "プロジェクトに不安がある", "契約条件を変えたい"], "scores": [2, 5, 2, 2], "exp": "ドイツは「不確実性回避」が高く、詳細な計画と根拠を求める文化です。これは信頼の問題ではなく文化的標準です。"}, {"cat": "CQ Knowledge", "text": "イスラム教徒のパートナーとの会食を計画。\n金曜午後を提案する前に確認すべきは？", "opts": ["相手の出席可能時間", "金曜の集団礼拝（ジュマー）への配慮", "アルコール提供の有無", "ハラル対応の店"], "scores": [3, 5, 4, 4], "exp": "金曜は集団礼拝（昼ごろ）があり、午後は配慮が必要。基本的な宗教的慣習の理解がCQ Knowledgeの実用です。"}, {"cat": "CQ Knowledge", "text": "高コンテキスト文化と低コンテキスト文化の最も大きな違いは？", "opts": ["話す言語", "情報の伝達様式（暗黙か明示か）", "ビジネスの進め方", "教育水準"], "scores": [1, 5, 3, 1], "exp": "Edward Hallの理論。高コンテキスト（日本・中国・アラブ）は文脈・関係性に意味を込め、低コンテキスト（米・独）は明示的な言語に意味を込めます。"}, {"cat": "CQ Knowledge", "text": "アメリカ系企業で「meritocracy（能力主義）」が強い職場。\n40代の自分の方が経験豊富だが、20代のマネージャーが配属された。\n最も妥当な認識は？", "opts": ["能力主義の文化的標準で珍しくない", "会社の人事ミス", "若い世代への期待が高すぎる", "自分への評価が低い"], "scores": [5, 2, 2, 1], "exp": "米系の能力主義では年齢より成果が優先され、年下の上司は普通です。年功序列文化との明確な違いの理解が必要です。"}, {"cat": "CQ Knowledge", "text": "インドのIT企業との交渉で、相手が大幅な値下げを強く要求してきた。\nこれを最も妥当に解釈すると？", "opts": ["相手が予算不足", "交渉文化として標準的", "関係を築きたくない", "こちらの提案への不満"], "scores": [2, 5, 2, 3], "exp": "インド・中東・南米などでは交渉での強い値下げ要求は標準的な「交渉のダンス」です。日本式の即決定価格文化との違いがあります。"}, {"cat": "CQ Knowledge", "text": "韓国の取引先と新年の挨拶。\n最も妥当なタイミングは？", "opts": ["1月1日", "旧正月（ソルラル）の前後", "クリスマス前後", "2月中旬"], "scores": [3, 5, 2, 2], "exp": "韓国・中国では旧正月（春節・ソルラル）が最も重要な祝日。新暦より旧暦の祝祭への配慮が文化理解です。"}, {"cat": "CQ Knowledge", "text": "中国の取引先と過去の戦争の話題に触れる必要が出た。\n最も妥当な配慮は？", "opts": ["歴史的事実を中立的に整理して伝える", "話題を避け続ける", "相手の歴史観を尊重した対話姿勢で臨む", "公式な見解だけを伝える"], "scores": [3, 3, 5, 3], "exp": "歴史的文脈は文化的アイデンティティに深く関わります。「相手の歴史観への敬意」を持つ姿勢が必要です。完全に避けると関係が表面的になります。"}, {"cat": "CQ Knowledge", "text": "日本人と話す欧米人が、しばしば「沈黙が居心地悪い」と感じる理由は？", "opts": ["内容に同意していないから", "低コンテキスト文化では沈黙＝対話の停滞", "相手への興味がないから", "話題が尽きたから"], "scores": [2, 5, 2, 2], "exp": "日本では沈黙は思考・敬意の表現ですが、低コンテキスト文化では「会話を続ける」ことが期待されます。文化的なギャップの典型例です。"}, {"cat": "CQ Knowledge", "text": "「面子（メンツ）」を最も大切にする文化圏は？", "opts": ["北欧", "東アジア・中華圏", "ラテンアメリカ", "アフリカ"], "scores": [2, 5, 3, 3], "exp": "中華圏（中国・台湾・韓国・ベトナムなど）では面子（体面）の重要性が極めて高く、公の場での恥は関係に大きな影響を与えます。"}, {"cat": "CQ Knowledge", "text": "OK サインを意味する「親指と人差し指で輪を作る」ジェスチャーを\n避けるべき国はどこか？", "opts": ["フランス・ブラジル・トルコ", "アメリカ・カナダ", "オーストラリア・ニュージーランド", "インド・タイ"], "scores": [5, 1, 1, 2], "exp": "フランスでは「ゼロ・無価値」、ブラジル・トルコでは侮辱的な意味になります。ジェスチャーの文化的意味の知識が必要です。"}, {"cat": "CQ Knowledge", "text": "Hofstede の文化次元のうち、\n日本が最も特徴的に高い次元は？", "opts": ["権力格差", "不確実性回避", "個人主義", "男性性"], "scores": [3, 5, 1, 4], "exp": "日本は不確実性回避が世界最高水準（92）、男性性も高い（95）。個人主義は低い（46）。これらが日本のビジネス文化の特徴を作ります。"}, {"cat": "CQ Knowledge", "text": "イギリス人との会議で名刺の扱いが軽く感じた。\n最も妥当な解釈は？", "opts": ["相手の関心が低い", "欧米では名刺は情報交換の道具で儀式性が低い", "相手が無礼な人物", "会議の優先度が低い"], "scores": [2, 5, 1, 2], "exp": "日本の名刺交換は儀式ですが、欧米では実用的な情報交換に過ぎません。文化的解釈の違いが誤解を生みやすい例です。"}, {"cat": "CQ Knowledge", "text": "中国の取引先がミスをして、\nメンバー全員の前で指摘された。その後の関係は？", "opts": ["問題を共有できて関係が深まる", "面子を失わせたため関係が大きく悪化", "ビジネスなので影響なし", "謝罪すれば修復可能"], "scores": [1, 5, 1, 3], "exp": "中国・アジアでは公の場での恥（面子の喪失）は関係に深刻なダメージを与えます。個別の場での対話が原則です。"}, {"cat": "CQ Knowledge", "text": "スウェーデンの会議で意思決定に時間がかかる。\n最も妥当な理由は？", "opts": ["相手のスピード感が遅い", "北欧文化のコンセンサス（合意）志向", "プロジェクトの優先度が低い", "情報不足"], "scores": [2, 5, 2, 3], "exp": "北欧諸国は強いコンセンサス文化で、関係者全員の合意形成を重視します。ボトムアップ型の意思決定様式の理解が必要です。"}, {"cat": "CQ Knowledge", "text": "アメリカ人がプレゼン中に頻繁に質問してくる。\n最も妥当な解釈は？", "opts": ["プレゼンが分かりにくい", "低コンテキスト文化での標準的な参加スタイル", "相手の関心が薄い", "プレゼンを邪魔したい"], "scores": [2, 5, 2, 1], "exp": "低コンテキスト・個人主義文化では能動的な参加（質問・割り込み）が「関心と理解」の表れです。日本式の「最後まで聞く」文化との違いです。"}, {"cat": "CQ Knowledge", "text": "フィリピンのチームメンバーが\n経済的に厳しい状況にある。\n最も配慮すべき視点は？", "opts": ["昇給を提案する", "個人の問題なので関与しない", "家族への送金など共同体的責任の文化的背景を理解する", "他のメンバーと同じ扱いをする"], "scores": [3, 2, 5, 3], "exp": "フィリピン・東南アジアの多くでは家族への経済的責任が個人を超えて共有されます。社会経済的文脈の理解がCQ Knowledgeです。"}, {"cat": "CQ Knowledge", "text": "「グローバルでは英語が通じれば文化の違いは大きな問題にならない」\nという考えを最も適切に評価すると？", "opts": ["概ね正しい", "部分的に正しいが価値観・規範の理解の方が本質", "完全に間違い", "状況次第"], "scores": [1, 5, 3, 3], "exp": "言語は表面的なコミュニケーションを可能にしますが、文化的価値観・規範のズレが本質的な誤解の源泉です。CQの本質理解を問う問題です。"}, {"cat": "CQ Strategy", "text": "重要な異文化会議の前、最も時間をかける準備は？", "opts": ["プレゼン資料の作り込み", "相手の文化と自分のバイアスの確認", "議題の事前共有", "業界知識の最新化"], "scores": [3, 5, 3, 3], "exp": "自分のバイアスを意識的に確認することがCQ Strategyの中核です。資料・情報も大切ですが、メタ認知が他のスキルを活かす土台となります。"}, {"cat": "CQ Strategy", "text": "異文化との関わりで失敗した時、最初に考えることは？", "opts": ["相手の反応の意味", "自分が文化的にどんな前提で動いていたか", "次回の改善策", "関係修復の方法"], "scores": [3, 5, 3, 3], "exp": "自分の文化的前提への気づきが原因分析の出発点です。「相手の反応」「次回の改善」だけだと自己観察が浅くなります。"}, {"cat": "CQ Strategy", "text": "初めての国でビジネス会議に向かう車内、\n何を意識する？", "opts": ["プレゼンの内容", "相手の文化的背景と自分の先入観", "議論の流れ予測", "自分の見せ方"], "scores": [3, 5, 3, 3], "exp": "会議前のメタ認知（自分の先入観への意識）がCQ Strategyの実践的な瞬間です。"}, {"cat": "CQ Strategy", "text": "会議中、コミュニケーションがうまくいっているか\nどうやって確認する？", "opts": ["相手が頷いているかを見る", "質問が出るかどうかで判断", "相手の表情・声の調整・間の取り方を観察する", "会議後に振り返る"], "scores": [3, 3, 5, 2], "exp": "非言語サインのリアルタイム観察がCQ Strategyの実践力です。「頷き」だけでは表面的な確認です。"}, {"cat": "CQ Strategy", "text": "会議後、相手と理解にズレがあったと気づいた。\n最初に考えるべきことは？", "opts": ["伝え方が悪かった", "文化的な前提の違いがあったかも", "相手の理解力の問題", "次回は通訳を入れよう"], "scores": [3, 5, 2, 3], "exp": "ズレを「文化的前提の違い」という観点で見られることがCQ Strategyの分析力です。"}, {"cat": "CQ Strategy", "text": "異文化のパートナーと長期プロジェクトを始める前、\n最も価値のある事前共有は？", "opts": ["目標と役割", "コミュニケーションスタイル・意思決定方法・時間感覚", "契約と予算", "お互いの強み"], "scores": [3, 5, 3, 4], "exp": "文化的な前提を事前に明示的に共有することが摩擦を防ぐCQ Strategyの予防的実践です。"}, {"cat": "CQ Strategy", "text": "相手の反応が想定と違った時、最初に取る思考のステップは？", "opts": ["自分の伝え方を改善", "文化的解釈の違いを疑う", "相手の理解度を確認", "議題に戻る"], "scores": [3, 5, 4, 2], "exp": "想定外の反応を「文化的差異の可能性」として開かれた解釈ができることがCQ Strategyです。"}, {"cat": "CQ Strategy", "text": "「相手は何を大切にしているか」を理解するために、\n最も効果的な方法は？", "opts": ["直接尋ねる", "観察・質問・情報収集を組み合わせる", "会話の中で自然に把握", "ネット情報を調べる"], "scores": [3, 5, 3, 2], "exp": "複数のアプローチを組み合わせて相手の価値観を多角的に理解することがCQ Strategyの探究力です。"}, {"cat": "CQ Strategy", "text": "自分が「日本的な前提」を相手に押し付けていないか、\nどう確認している？", "opts": ["指摘された時に気をつける", "定期的に自分のコミュニケーションを振り返る", "相手の反応を見て調整する", "あまり意識していない"], "scores": [3, 5, 4, 1], "exp": "定期的な自己観察の習慣がCQ Strategyの最も基礎的な姿勢です。受動的な気づきだけでは不十分です。"}, {"cat": "CQ Strategy", "text": "新しい国の人と初対面の前、\n何を最も準備する？", "opts": ["相手の言語の挨拶", "相手の文化的文脈と相手が大切にしていそうなこと", "話題のリスト", "資料の準備"], "scores": [3, 5, 3, 2], "exp": "相手の世界観への先読みがCQ Strategyの準備力です。挨拶や話題は表面的な準備に過ぎません。"}, {"cat": "CQ Strategy", "text": "外国人スタッフが会議で発言しない。\n最も妥当な解釈アプローチは？", "opts": ["参加意欲が低い", "内向的な性格", "複数の可能性（文化的規範・心理的安全性・言語的負荷など）を検討する", "内容を理解していない"], "scores": [2, 3, 5, 2], "exp": "単一の解釈に飛びつかず複数の文化的・心理的可能性を検討する柔軟性がCQ Strategyの本質です。"}, {"cat": "CQ Strategy", "text": "プロジェクトが遅延した時、文化的な要素も原因として検討するか？", "opts": ["プロセスの問題として分析", "時間感覚・優先順位の文化的違いも検討する", "相手の責任", "仕方ない"], "scores": [3, 5, 2, 1], "exp": "問題の原因を文化的観点からも多角的に分析できることがCQ Strategyの分析の深さです。"}, {"cat": "CQ Strategy", "text": "異文化間で誤解が起きた直後、最も大切な行動は？", "opts": ["すぐに謝る", "「なぜ誤解が起きたか」を冷静に整理する", "相手に確認する", "状況が落ち着くのを待つ"], "scores": [3, 5, 4, 2], "exp": "感情的にならず冷静に文化的観点から整理できることがCQ Strategyの自己制御力です。"}, {"cat": "CQ Strategy", "text": "自分のコミュニケーションが相手にどう見えているか、\nどう把握する？", "opts": ["相手の反応で判断", "信頼できる第三者からのフィードバックも活用", "自分の意図と一致しているはず", "あまり意識しない"], "scores": [3, 5, 2, 1], "exp": "自分を「外から見る」視点を持つことがCQ Strategyの自己客観化能力です。"}, {"cat": "CQ Strategy", "text": "初めて訪れる国でのビジネス計画に、\n最も含めるべき要素は？", "opts": ["目標・予算・スケジュール", "文化的禁忌・ビジネス慣行・コミュニケーション様式", "関係者リスト", "リスク分析"], "scores": [3, 5, 3, 3], "exp": "文化的要素を計画の中核に組み込めることがCQ Strategyの先見性です。"}, {"cat": "CQ Strategy", "text": "相手の言葉と態度に微妙なズレを感じた時、\n最も妥当な対処は？", "opts": ["率直に「本音を聞かせて」と尋ねる", "間接表現の可能性を念頭に観察を続ける", "態度を信じて言葉を無視する", "ズレを指摘する"], "scores": [3, 5, 3, 2], "exp": "間接表現の文化的可能性を念頭に置きながら観察できることがCQ Strategyの読解力です。"}, {"cat": "CQ Strategy", "text": "異文化メンバーが多いチームの初回ミーティングで、\n最も価値ある時間の使い方は？", "opts": ["自己紹介とチーム目標", "各メンバーの文化的背景・コミュニケーション様式・期待を共有する", "役割分担と計画", "お互いの強みの確認"], "scores": [3, 5, 3, 4], "exp": "文化的差異を最初にオープンにできる場を設計することがCQ Strategyの集団的実践です。"}, {"cat": "CQ Strategy", "text": "自分の行動が文化的に不適切だったと気づいた後、\n最も効果的な学習方法は？", "opts": ["謝って終わる", "具体的に何がどう不適切だったかを構造化して理解する", "次回は気をつける", "関係者に確認する"], "scores": [2, 5, 3, 4], "exp": "具体的・構造的な振り返りが行動変容を生むCQ Strategyの内省力です。"}, {"cat": "CQ Strategy", "text": "異文化間で合意が得られない時、最も柔軟な対応は？", "opts": ["より強く主張する", "文化的な意思決定の違いを考慮してアプローチを変える", "相手の判断を待つ", "第三者に介入を頼む"], "scores": [2, 5, 3, 3], "exp": "行き詰まりを文化的観点から分析して戦略を切り替える柔軟性がCQ Strategyの実践力です。"}, {"cat": "CQ Strategy", "text": "「相手のことを理解した」と思っていたが、\n後日それが思い込みだったと判明。最も建設的な対応は？", "opts": ["恥ずかしさを抑えて流す", "思い込みの原因を振り返り理解を更新する", "次回は決めつけないと自分に言い聞かせる", "関係者に確認する"], "scores": [2, 5, 3, 3], "exp": "自分の思い込みを認め、認知を更新できる開かれた自己認識がCQ Strategyの成熟さです。"}, {"cat": "CQ Strategy", "text": "異文化との仕事で「なんか違和感がある」と感じた時、\n最初の対応は？", "opts": ["感覚を信じて距離を置く", "「なぜそう感じるか」を文化的観点から掘り下げる", "「自分の気のせい」と無視", "議論で確認する"], "scores": [2, 5, 2, 3], "exp": "直感的な違和感を文化的分析の出発点にできることがCQ Strategyの感受性です。"}, {"cat": "CQ Strategy", "text": "異文化での成功体験を次に活かすために、最も有効なのは？", "opts": ["「うまくいった」体験を覚えておく", "成功要因を文化的観点から分析・パターン化する", "同じ方法を次回も使う", "他者に共有する"], "scores": [2, 5, 2, 4], "exp": "成功の文化的要因を構造化することで再現性ある学習に変えるCQ Strategyの学習力です。"}, {"cat": "CQ Strategy", "text": "異文化のコミュニケーションスキルを高めるために、\n最も効果的な学習法は？", "opts": ["経験の積み重ねだけ", "経験＋書籍・現地の人からのフィードバック", "本やセミナーで学ぶ", "似た経験のある人の助言"], "scores": [3, 5, 2, 3], "exp": "複数のリソースを組み合わせた学習がCQ Strategyの体系的成長の道です。"}, {"cat": "CQ Strategy", "text": "文化的に難しい場面に備えて、事前のシミュレーションをするか？", "opts": ["可能性ある場面を想定して対応を考える", "その場で対応すれば良い", "難しい場面は避ける", "失敗してから学ぶ"], "scores": [5, 3, 1, 2], "exp": "事前シミュレーションは文化的失敗を防ぐCQ Strategyの予防的実践です。"}, {"cat": "CQ Strategy", "text": "「自分には文化的偏見がある」という考えに対する立場は？", "opts": ["誰にもあると認め、自分のバイアスを継続的に観察する", "少しはあるかもしれない", "あまりないと思う", "自分は中立的だと思う"], "scores": [5, 3, 2, 1], "exp": "バイアスは誰にでもあるという認識と継続的な自己観察がCQ Strategyの前提となる姿勢です。"}, {"cat": "CQ Action", "text": "低英語レベルの外国人クライアントとの会議。\n最も適切な話し方の調整は？", "opts": ["普段通り話す", "相手の英語レベル・文化的背景に合わせて意識的に調整する", "ゆっくり・大きな声で話す", "通訳を入れる"], "scores": [2, 5, 2, 3], "exp": "相手のスタイル全体に合わせる調整がCQ Actionです。「ゆっくり大きく」だけでは相手を子供扱いするリスクがあります。"}, {"cat": "CQ Action", "text": "アジアの取引先からの依頼を断る必要がある。\n最も関係を保てる断り方は？", "opts": ["「申し訳ありませんが、できません」と明確に", "「難しいですが、代わりに〇〇ならできます」と代替案", "「考えさせてください」と保留", "「上司に相談します」と先延ばし"], "scores": [3, 5, 3, 2], "exp": "間接的な断りに代替案を組み合わせることが関係維持と意思伝達の両立になるCQ Actionです。"}, {"cat": "CQ Action", "text": "会議中、長い沈黙が続いた。\n相手は東アジア系。最も妥当な対応は？", "opts": ["何か話題を振って沈黙を埋める", "沈黙が思考の時間と理解して焦らず待つ", "自分の意見を述べる", "「何か質問は？」と促す"], "scores": [2, 5, 3, 3], "exp": "沈黙の文化的意味（思考・敬意の表現）を理解して受け入れられることがCQ Actionの繊細さです。"}, {"cat": "CQ Action", "text": "南欧のパートナーが頬にキスの挨拶をしてきた。\n最も自然な対応は？", "opts": ["丁重に断る", "相手の慣習として受け入れて応じる", "握手に切り替える", "少し戸惑いながらも応じる"], "scores": [1, 5, 3, 3], "exp": "相手の文化的慣習を自然に受け入れる柔軟性がCQ Actionの行動的表れです。"}, {"cat": "CQ Action", "text": "インドのパートナーが手で食事をしている。\n会食での最も適切な対応は？", "opts": ["自分のやり方（カトラリー）を維持する", "可能な範囲で相手のスタイルに合わせる", "気にせず食事に集中する", "相手に「カトラリーは？」と聞く"], "scores": [2, 5, 3, 1], "exp": "食事スタイルへの柔軟な適応がCQ Actionの具体的実践です。「カトラリー」を相手に求めるのは文化的無理解です。"}, {"cat": "CQ Action", "text": "外国人の同僚が日本のビジネス慣習（名刺の扱いなど）を知らずに行動した。\n最も建設的な反応は？", "opts": ["その場で正しいやり方を指摘", "責めずに自然な形で説明", "後で本人にだけ伝える", "気にしない"], "scores": [2, 5, 4, 3], "exp": "相手の尊厳を守りながら自然に学びの機会を作ることがCQ Actionの育成的な実践です。"}, {"cat": "CQ Action", "text": "高権力距離文化（インドネシアなど）の上席者に\n意見の不一致を伝える必要がある。最も適切な伝え方は？", "opts": ["率直に異論を述べる", "敬意を示しながら間接的・提案的に伝える", "別の機会まで保留する", "第三者経由で伝える"], "scores": [2, 5, 3, 3], "exp": "権力格差への文化的感度を行動に反映できることがCQ Actionの繊細さです。"}, {"cat": "CQ Action", "text": "会議が長引き、相手国チームに疲れが見える。\n最も配慮ある進行は？", "opts": ["予定通り進める", "休憩を提案して相手のペースを尊重", "早めに切り上げる", "急いで重要点だけまとめる"], "scores": [2, 5, 3, 3], "exp": "相手の文化的・身体的なペースに柔軟に対応できることがCQ Actionの配慮です。"}, {"cat": "CQ Action", "text": "アメリカ人のクライアント向けプレゼン。\n最も効果的なプレゼン設計は？", "opts": ["最後に質疑時間を取る通常スタイル", "途中での質問を歓迎する対話型", "結論を最初に述べる", "全員が静かに聞く形式"], "scores": [3, 5, 4, 2], "exp": "低コンテキスト・個人主義文化のクライアントに合わせた対話型のプレゼン設計がCQ Actionです。"}, {"cat": "CQ Action", "text": "相手の母国語での挨拶や感謝を覚えるか？", "opts": ["英語が共通語なので必要ない", "主要な挨拶は意識的に使う", "発音が難しいので避ける", "相手が日本語で挨拶してきた場合のみ返す"], "scores": [2, 5, 2, 3], "exp": "小さな言語的努力が大きな信頼を生むCQ Actionの実践です。"}, {"cat": "CQ Action", "text": "集団主義文化の取引先（東アジア・東南アジア）と関係を築く時の最適なアプローチは？", "opts": ["個人と直接交渉する", "チーム・組織全体への敬意を示しながら関係構築", "個人の意見を引き出そうとする", "効率を優先する"], "scores": [2, 5, 2, 2], "exp": "集団主義文化では組織への敬意が信頼構築の鍵です。日本式の個人交渉は逆効果になります。"}, {"cat": "CQ Action", "text": "フランスのパートナーが意思決定に時間をかけている。\n最も妥当な対応は？", "opts": ["早い決断を促す", "相手のプロセスを尊重して時間を与える", "代わりに決定する", "別の相手に切り替える"], "scores": [1, 5, 1, 1], "exp": "文化的な意思決定ペースを尊重し急かさないことがCQ Actionの忍耐力です。"}, {"cat": "CQ Action", "text": "ドイツの取引先との初対面で、最も適切な敬称の使い方は？", "opts": ["ファーストネームで呼ぶ", "姓 + Herr/Frau（または Mr./Ms.）で呼ぶ", "役職名で呼ぶ", "相手が指定したら合わせる"], "scores": [1, 5, 3, 3], "exp": "ドイツのフォーマルな文化では敬称の使用が初期の信頼構築の基本です。日本人が「親しみ」と勘違いして名前で呼ぶと無礼になります。"}, {"cat": "CQ Action", "text": "異文化のパートナーと共同で資料を作る。\n最も配慮ある設計は？", "opts": ["日本のテンプレートをそのまま使う", "相手の文化に配慮したデザイン・色・表現を選ぶ", "英語版だけ作る", "シンプルに統一する"], "scores": [1, 5, 2, 3], "exp": "資料の文化的適応はCQ Actionの視覚・表現的な実践です。"}, {"cat": "CQ Action", "text": "ラテン文化の同僚が会議中に感情豊かに話す。\n自分はどう振る舞うか？", "opts": ["「冷静に」と促す", "感情表現の文化差として受け入れ自分も柔軟に対応", "距離を置く", "スタイルを維持する"], "scores": [1, 5, 2, 3], "exp": "感情表現の文化差を受け入れて自分も柔軟に対応することがCQ Actionの感情的調整力です。"}, {"cat": "CQ Action", "text": "アジアの取引先で「目を合わせすぎる」のが失礼な文化と知った時の調整は？", "opts": ["普段通りのアイコンタクト", "意識的に調整して相手が自然に感じる頻度にする", "目を合わせない", "相手から指摘を待つ"], "scores": [1, 5, 2, 1], "exp": "非言語コミュニケーション（アイコンタクト）の文化差に意識的に対応することがCQ Actionです。"}, {"cat": "CQ Action", "text": "相手の文化で重要な祝祭日（中秋節・ディワリなど）が近づいた。\n最も意味ある行動は？", "opts": ["特に何もしない", "一言の祝意メッセージを送る", "贈り物を送る", "知っているが触れない"], "scores": [1, 5, 3, 2], "exp": "小さな祝意の行動が大きな信頼を生みます。CQ Actionの細やかな実践です。"}, {"cat": "CQ Action", "text": "時差のある相手国チームとオンライン会議を組む時の配慮は？", "opts": ["自分の都合のいい時間で設定", "相手のタイムゾーンと標準業務時間を考慮", "均等に午前・午後で交互", "相手が合わせるべき"], "scores": [2, 5, 3, 1], "exp": "相手の物理的・時間的コンテキストへの配慮もCQ Actionの実践的側面です。"}, {"cat": "CQ Action", "text": "異文化メンバー間で意見対立。\nファシリテーターとしての最も建設的な動きは？", "opts": ["多数決で決める", "双方の文化的観点を尊重して共通点を探る対話を促進", "力のある側の意見を優先", "議題を変えて対立を避ける"], "scores": [2, 5, 1, 1], "exp": "文化的対立を橋渡しするファシリテーションがCQ Actionの高度な実践です。"}, {"cat": "CQ Action", "text": "相手の文化的禁忌をうっかり犯してしまった時の最善の対応は？", "opts": ["気にしないふりをする", "すぐに謝罪し、その意味を尋ねて学ぶ", "「知らなかった」と説明する", "話題を変える"], "scores": [1, 5, 3, 2], "exp": "文化的失礼への誠実な謝罪と学習姿勢がCQ Actionの誠実さです。"}, {"cat": "CQ Action", "text": "初対面の異文化の相手に話しかけるタイミングは？", "opts": ["自分から積極的に話しかける", "相手の対人距離・タイミングのサインを観察してから動く", "相手から話しかけるのを待つ", "共通の知人に紹介を頼む"], "scores": [3, 5, 3, 3], "exp": "相手の文化的ペースを観察してから動くことがCQ Actionの洗練さです。"}, {"cat": "CQ Action", "text": "相手国で文化的体験（地元料理・伝統行事など）の機会があった。\n参加の仕方は？", "opts": ["観察者として静かに見る", "積極的に体験して相手と共有", "負担にならない範囲で", "相手に合わせる"], "scores": [2, 5, 3, 3], "exp": "文化体験への積極参加が信頼を深めるCQ Actionです。"}, {"cat": "CQ Action", "text": "外国人にメールを書く時の調整は？", "opts": ["日本のビジネスメールスタイルで", "相手の国のビジネス慣習に合わせた文体", "翻訳ツールで日本語を英訳", "シンプルにする"], "scores": [2, 5, 2, 3], "exp": "メールの文体・構成の文化的調整もCQ Actionの実践スキルです。"}, {"cat": "CQ Action", "text": "自分のジョークが相手に通じなかった。\n最も建設的な対応は？", "opts": ["説明する", "笑いの文化差として受け入れスタイルを調整", "相手のセンスを疑う", "以降ジョークを控える"], "scores": [2, 5, 1, 3], "exp": "ユーモアの文化的ズレを受け入れて自分のスタイルを調整できることがCQ Actionです。"}, {"cat": "CQ Action", "text": "文化的に難しい交渉場面で信頼を勝ち取るための最も効果的な行動は？", "opts": ["最良の条件を提示", "相手の価値観・関係性を重視したアプローチで誠実さを示す", "実績で説得", "会う回数を増やす"], "scores": [3, 5, 3, 3], "exp": "相手の文化的価値観に根ざした誠実さこそが信頼構築の核心というCQ Actionの理解です。"}];
+
+// ═══════════════════════════════════════════════════════════
+//  EQレベル定義
+// ═══════════════════════════════════════════════════════════
+const LEVELS=[
+  {min:90,label:'非常に高い CQ',desc:'文化的知性が非常に高く、多様な文化背景の人と深い信頼関係を築き、グローバルな環境で高いパフォーマンスを発揮できます。'},
+  {min:78,label:'高い CQ',desc:'文化的知性が高く、異文化の場面で適切に行動できます。さらなる経験でグローバルリーダーシップが向上します。'},
+  {min:63,label:'平均以上の CQ',desc:'文化的知性は平均以上です。意識的に異文化と関わることで、さらに対応力が向上します。'},
+  {min:48,label:'平均的な CQ',desc:'文化的知性は一般的な水準です。特定のカテゴリに意識を向けることで大きな成長が見込まれます。'},
+  {min:0,label:'成長の余地あり',desc:'文化的知性を高めることで、グローバルな仕事と人間関係の質が大きく改善する可能性があります。'},
+];
+const CAT_COMMENTS={
+  'CQ Drive':{hi:'異文化への内発的な関心と動機が非常に高く、グローバルな関わりを楽しめています。',mid:'異文化への動機はあります。日常の中で異文化に意識的に触れる機会を増やすとさらに伸びます。',lo:'まず一つの文化に好奇心を持って深く触れることから始めましょう。'},
+  'CQ Knowledge':{hi:'文化的な規範・価値観・慣習について深く正確な知識を持っています。',mid:'基本的な文化的知識はあります。Hofstedeの文化次元・高低コンテキスト理論など体系的学習で深まります。',lo:'相手国のビジネス慣習・タブー・歴史を一つずつ調べる習慣を始めましょう。'},
+  'CQ Strategy':{hi:'自分の文化的バイアスに気づき、状況に応じて思考と戦略を柔軟に調整できています。',mid:'メタ認知はある程度できています。事前準備と振り返りの習慣化でさらに深まります。',lo:'異文化との関わりの後に「自分の文化的前提は何だったか」を振り返る習慣を始めましょう。'},
+  'CQ Action':{hi:'状況に応じて言動を柔軟に調整し、文化的に適切な行動ができています。',mid:'文化的な行動調整はある程度できています。実践の場を増やすことで定着します。',lo:'まず挨拶・敬称など簡単な行動から相手の文化に合わせる練習を始めましょう。'}
+};
+
+// ═══════════════════════════════════════════════════════════
+//  定数・状態
+// ═══════════════════════════════════════════════════════════
+const PER_SESSION=20,CAT_PER=5;
+const STORAGE_KEY='cq_test_results_v1';
+const GAS_URL='https://script.google.com/macros/s/AKfycbzRKMVdPcDS0bUschN29ITAL9Twa1rp7NZWHK1wnDsFCslzNLKxzbKHwymDMKeliy1lQA/exec';
+let questions=[],cur=0,totalScore=0,elapsed=0,startTime=0,timerID=null,catScores={},currentName='';
+
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+// ★ 選択肢と点数をセットでシャッフル
+function shuffleOpts(q){
+  const pairs=shuffle(q.opts.map((o,i)=>({o,s:q.scores[i]})));
+  return {...q,opts:pairs.map(p=>p.o),scores:pairs.map(p=>p.s)};
+}
+
+function pickQuestions(){
+  const cats=[...new Set(BANK.map(q=>q.cat))];
+  let sel=[];
+  cats.forEach(c=>{const pool=shuffle(BANK.filter(q=>q.cat===c));sel.push(...pool.slice(0,CAT_PER));});
+  return shuffle(sel).map(q=>shuffleOpts(q));
+}
+
+function show(id){['s-intro','s-test','s-result'].forEach(s=>{document.getElementById(s).style.display=(s===id?'block':'none');});}
+function fmtDate(iso){const d=new Date(iso);return`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
+function loadResults(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[];}}
+function saveResult(r){const all=loadResults();all.push(r);localStorage.setItem(STORAGE_KEY,JSON.stringify(all));}
+async function sendToServer(record){
+  try{await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(record)});return true;}
+  catch(e){return false;}
+}
+
+function showIntro(){
+  const all=loadResults();
+  const urlName=new URLSearchParams(window.location.search).get('name')||'';
+  const storedName=localStorage.getItem('test_player_name')||'';
+  const recentName=urlName||storedName||(all.length?all[all.length-1].name:'');
+  const histHTML=all.length===0?`<p class="hist-empty">まだ記録がありません</p>`
+    :all.slice().reverse().slice(0,5).map(r=>`
+      <div class="hist-item">
+        <span class="hist-eq">${r.eq}</span>
+        <div class="hist-meta"><div class="hist-name">${r.name}</div><div class="hist-date">${fmtDate(r.date)}</div></div>
+        <div class="hist-score">${r.score}/${PER_SESSION*5}点<br><span style="color:var(--text3);font-size:11px">${r.level}</span></div>
+      </div>`).join('');
+
+  document.getElementById('s-intro').innerHTML=`
+    <div class="card">
+      <div class="intro-header">
+        <div class="intro-logo">🌏</div>
+        <div>
+          <div class="intro-title">CQ テスト</div>
+          <div class="intro-sub">文化的知性テスト（Cultural Intelligence）</div>
+        </div>
+      </div>
+      <div class="meta-grid">
+        <div class="meta-box"><div class="meta-n">${PER_SESSION}</div><div class="meta-l">出題数</div></div>
+        <div class="meta-box"><div class="meta-n">100</div><div class="meta-l">満点</div></div>
+        <div class="meta-box"><div class="meta-n">4択</div><div class="meta-l">回答形式</div></div>
+      </div>
+      <div class="cats-row"><span class="cat-pill">CQ Drive</span><span class="cat-pill">CQ Knowledge</span><span class="cat-pill">CQ Strategy</span><span class="cat-pill">CQ Action</span></div>
+      <div class="notice-box">
+        ✔ 選択肢の順番は毎回ランダムです<br>
+        ✔ 点数は最後まで表示されません<br>
+        ✔ <strong>「正しそう」ではなく「実際の自分」を選んでください</strong><br>
+        ✔ どれも正解に見える問題が多いです
+      </div>
+      <div class="name-section">
+        <div class="name-row-input">
+          <span class="name-label">名前</span>
+          <input class="name-input" id="name-input" type="text" maxlength="30" placeholder="山田 太郎"
+            value="${recentName.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"
+            oninput="document.getElementById('name-err').style.display='none'"
+            onkeydown="if(event.key==='Enter')startTest()">
+        </div>
+        <p id="name-err" class="name-error">名前を入力してください</p>
+      </div>
+      <button class="btn-primary" onclick="startTest()">テストを開始する →</button>
+    </div>
+    <div class="card-sm">
+      <div class="hist-hdr">
+        <span class="hist-ttl">過去の記録${all.length?`（${all.length}件）`:''}</span>
+        ${all.length?`<button class="btn-sm" onclick="exportCSV()">CSV出力</button>`:''}
+      </div>
+      ${histHTML}
+    </div>
+    <p class="note-sm">このテストは簡易的な目安です。正式な評価は専門家にご相談ください。<br>Created by S.O.Y</p>`;
+  show('s-intro');
+}
+
+function startTest(){
+  const input=document.getElementById('name-input');
+  const name=(input?input.value:'').trim();
+  if(!name){const err=document.getElementById('name-err');if(err)err.style.display='block';input&&input.focus();return;}
+  currentName=name;questions=pickQuestions();cur=0;totalScore=0;elapsed=0;catScores={};
+  questions.forEach(q=>{if(!catScores[q.cat])catScores[q.cat]=0;});
+  startTime=Date.now();show('s-test');
+  timerID=setInterval(()=>{elapsed=Math.floor((Date.now()-startTime)/1000);const t=document.getElementById('timer-el');if(t)t.textContent=fmt(elapsed);},500);
+  renderQ();
+}
+
+function renderQ(){
+  const q=questions[cur];
+  const pct=Math.round((cur/PER_SESSION)*100);
+  const lbls=['A','B','C','D'];
+  document.getElementById('s-test').innerHTML=`
+    <div class="test-hdr">
+      <div class="hdr-row">
+        <span class="q-label">問題 ${cur+1} <span style="color:var(--text3)">/ ${PER_SESSION}</span></span>
+        <span class="timer" id="timer-el">${fmt(elapsed)}</span>
+      </div>
+      <div class="sub-row">
+        <span class="name-badge">${currentName}</span>
+        <span style="font-size:11px;color:var(--text3)">${q.cat}</span>
+      </div>
+      <div class="pbar"><div class="pfill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="q-card">
+      <span class="cat-badge">${q.cat}</span>
+      <p class="q-text">${q.text}</p>
+    </div>
+    <div class="opts" id="opts-area">
+      ${q.opts.map((o,i)=>`
+        <button class="opt" onclick="answer(${i})">
+          <span class="opt-lbl">${lbls[i]}</span>
+          <span style="flex:1">${o}</span>
+        </button>`).join('')}
+    </div>
+    <div id="expl-area"></div>`;
+}
+
+function answer(idx){
+  const q=questions[cur];
+  const pts=q.scores[idx];
+  totalScore+=pts;catScores[q.cat]=(catScores[q.cat]||0)+pts;
+  document.querySelectorAll('.opt').forEach((b,i)=>{b.classList.add('disabled');if(i===idx)b.classList.add('selected');});
+  // ★ 点数は非表示・解説のみ
+  document.getElementById('expl-area').innerHTML=`
+    <div class="expl">${q.exp}</div>
+    <div class="next-wrap">
+      <button class="btn-ghost" onclick="nextQ()">${cur+1<PER_SESSION?'次の問題へ →':'結果を見る →'}</button>
+    </div>`;
+}
+
+function nextQ(){
+  cur++;
+  if(cur>=PER_SESSION){clearInterval(timerID);elapsed=Math.floor((Date.now()-startTime)/1000);showResult();}
+  else renderQ();
+}
+
+function showResult(){
+  const eq=totalScore;
+  const lvl=LEVELS.find(l=>eq>=l.min)||LEVELS[LEVELS.length-1];
+  const catMax=CAT_PER*5;
+  const catResults=Object.entries(catScores).map(([cat,sc])=>({
+    cat,sc,pct:Math.round((sc/catMax)*100),
+    comment:sc/catMax>=0.8?CAT_COMMENTS[cat].hi:sc/catMax>=0.6?CAT_COMMENTS[cat].mid:CAT_COMMENTS[cat].lo
+  }));
+  const catBreakdown={};catResults.forEach(r=>{catBreakdown[r.cat]={score:r.sc,max:catMax,pct:r.pct};});
+  const record={testType:'CQ',name:currentName,eq,score:totalScore,maxScore:PER_SESSION*5,acc:Math.round((totalScore/(PER_SESSION*5))*100),secs:elapsed,level:lvl.label,date:new Date().toISOString(),catBreakdown};
+  saveResult(record);
+  sendToServer(record).then(ok=>{
+    const el=document.getElementById('save-status');
+    if(el)el.innerHTML=ok
+      ?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Googleスプレッドシートに送信しました'
+      :'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ローカルに保存（送信失敗）';
+  });
+  document.getElementById('s-result').innerHTML=`
+    <div class="card">
+      <div class="result-hero">
+        <p class="result-name">${currentName} さんの結果</p>
+        <div class="eq-ring"><span class="eq-lbl-sm">CQ</span><span class="eq-val">${eq}</span></div>
+        <h2 class="result-title">${lvl.label}</h2>
+        <p class="result-desc">${lvl.desc}</p>
+        <div id="save-status" class="save-notice">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          送信中...
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat-box"><div class="stat-n">${eq}</div><div class="stat-l">CQスコア（/100）</div></div>
+        <div class="stat-box"><div class="stat-n">${Math.round((totalScore/(PER_SESSION*5))*100)}%</div><div class="stat-l">達成率</div></div>
+        <div class="stat-box"><div class="stat-n">${fmt(elapsed)}</div><div class="stat-l">所要時間</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <p class="bkdn-ttl">カテゴリ別スコアと改善ポイント</p>
+      ${catResults.map(r=>`
+        <div class="cat-result">
+          <div class="cat-result-row">
+            <span class="cat-name">${r.cat}</span>
+            <span class="cat-pts">${r.sc}/${catMax}点（${r.pct}%）</span>
+          </div>
+          <div class="cat-bar-wrap"><div class="cat-bar-fill" style="width:${r.pct}%"></div></div>
+          <p class="cat-comment">${r.comment}</p>
+        </div>`).join('')}
+    </div>
+    <div class="retry-wrap">
+      <button class="btn-primary" onclick="startTest()">もう一度挑戦する（新しい20問）→</button>
+      <button class="btn-ghost" onclick="exportCSV()">結果をCSVでダウンロード</button>
+      <button class="btn-ghost" onclick="showIntro()">トップへ戻る</button>
+      <button class="btn-ghost" onclick="goToResults()">📊 結果をまとめて確認する →</button>
+    </div>
+    <p class="note-sm" style="margin-top:12px">※このテストは簡易的な目安です。正式な評価は専門家にご相談ください。<br>Created by S.O.Y</p>`;
+  show('s-result');
+}
+
+function goToResults(){
+  const name = currentName || localStorage.getItem('test_player_name') || '';
+  window.location.href = 'results.html' + (name ? '?name=' + encodeURIComponent(name) : '');
+}
+function exportCSV(){
+  const all=loadResults();if(!all.length){alert('まだ記録がありません。');return;}
+  const header='名前,CQスコア,達成率(%),所要時間(秒),レベル,実施日時';
+  const rows=all.map(r=>[`"${(r.name||'').replace(/"/g,'""')}"`,r.eq,r.acc,r.secs,`"${(r.level||'').replace(/"/g,'""')}"`,`"${fmtDate(r.date)}"`].join(','));
+  const csv='\uFEFF'+header+'\n'+rows.join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`CQテスト結果_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+showIntro();
+</script>
+</body>
+</html>
