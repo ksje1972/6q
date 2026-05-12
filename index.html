@@ -21,67 +21,81 @@ body{
   background:var(--bg3);color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;
   min-height:100vh;display:flex;align-items:flex-start;justify-content:center;
-  padding:28px 16px 60px;
+  padding:24px 16px 60px;
 }
-.wrap{width:100%;max-width:520px;animation:fi .3s ease}
-@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.wrap{width:100%;max-width:520px}
 
 /* ヘッダー */
-.hero{display:flex;align-items:center;gap:12px;padding:0 0 18px;
-  border-bottom:0.5px solid var(--border);margin-bottom:16px}
+.hero{display:flex;align-items:center;gap:12px;padding-bottom:16px;
+  border-bottom:0.5px solid var(--border);margin-bottom:14px}
 .hero-logo{width:44px;height:44px;border-radius:10px;background:var(--text);
   display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .hero-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:2px}
-.hero-sub{font-size:12px;color:var(--text2)}
+.hero-sub{font-size:13px;color:var(--text2)}
 
-/* 名前入力エリア */
-.name-row{display:flex;align-items:center;gap:10px;margin-bottom:20px;
-  padding:11px 14px;border:0.5px solid var(--border2);
-  border-radius:var(--radius);background:var(--bg)}
-.name-row-label{font-size:12px;color:var(--text2);white-space:nowrap;flex-shrink:0}
+/* 名前入力 */
+.name-bar{display:flex;align-items:center;gap:10px;padding:11px 14px;
+  border:0.5px solid var(--border2);border-radius:var(--radius);
+  background:var(--bg);margin-bottom:16px}
+.name-bar:focus-within{border-color:#0F766E;box-shadow:0 0 0 3px rgba(15,118,110,0.12)}
+.name-label{font-size:13px;color:var(--text2);white-space:nowrap;flex-shrink:0}
 .name-input{flex:1;border:none;outline:none;font-size:15px;
-  background:transparent;color:var(--text);font-family:inherit}
+  background:transparent;color:var(--text);font-family:inherit;font-size:16px}
 .name-input::placeholder{color:var(--text3)}
-.name-error{font-size:12px;color:#c0392b;margin-top:-14px;margin-bottom:10px;display:none;padding-left:2px}
+.name-error{font-size:12px;color:#c0392b;margin-top:-10px;margin-bottom:8px;display:none;padding-left:2px}
 
 /* セクションラベル */
 .sec{font-size:10.5px;font-weight:600;letter-spacing:.7px;
-  color:var(--text3);text-transform:uppercase;margin:18px 0 7px;padding-left:2px}
+  color:var(--text3);text-transform:uppercase;margin:0 0 8px 2px;font-size:12px}
 
-/* CQ 注記 */
-.cq-note{display:flex;align-items:center;gap:6px;
-  font-size:11px;color:var(--text3);margin:-3px 0 8px;padding-left:2px}
-.cq-note::before{content:'';display:inline-block;width:12px;height:0.5px;background:var(--text3)}
+/* グリッド */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 
-/* リスト行 */
-.test-row{display:flex;align-items:center;gap:12px;padding:11px 13px;
-  border:0.5px solid var(--border);border-radius:var(--radius);
-  margin-bottom:6px;cursor:pointer;background:var(--bg);
-  transition:transform .1s,box-shadow .1s;text-decoration:none;color:inherit}
-.test-row:hover{transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,0,0,0.07)}
-.test-row:active{transform:scale(.98)}
-.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.icon{font-size:36px;width:44px;text-align:center;flex-shrink:0;line-height:1}
-.body{flex:1;min-width:0}
-.row-name{font-size:14px;font-weight:700;display:flex;align-items:center;gap:5px;
-  flex-wrap:wrap;margin-bottom:2px}
-.row-desc{font-size:11px;color:var(--text2)}
-.arr{font-size:18px;color:var(--text3);flex-shrink:0}
-.badge{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:500;white-space:nowrap}
+/* 通常タイル */
+.tile{border:0.5px solid var(--border);border-radius:var(--radius-lg);
+  padding:16px 12px 14px;display:flex;flex-direction:column;
+  align-items:center;gap:8px;cursor:pointer;background:var(--bg2);
+  transition:transform .1s,box-shadow .1s}
+.tile:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,0.07)}
+.tile:active{transform:scale(.97)}
+.tile-icon{font-size:38px;line-height:1}
+.tile-name{font-size:17px;font-weight:700}
+.tile-desc{font-size:12px;color:var(--text2);text-align:center;line-height:1.55}
+.tile-q{font-size:11px;padding:2px 9px;border-radius:100px;
+  background:var(--bg);border:0.5px solid var(--border);color:var(--text3)}
+
+/* CQ 分割タイル */
+.cq-tile{border:0.5px solid rgba(15,118,110,0.4);border-radius:var(--radius-lg);
+  overflow:hidden;cursor:pointer;display:flex;flex-direction:column;
+  transition:transform .1s,box-shadow .1s}
+.cq-tile:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,0.07)}
+.cq-tile:active{transform:scale(.97)}
+.cq-half{display:flex;align-items:center;gap:10px;padding:13px 12px;flex:1}
+.cq-half+.cq-half{border-top:0.5px solid rgba(15,118,110,0.25)}
+.cq-icon{font-size:24px;line-height:1;flex-shrink:0}
+.cq-body{flex:1;min-width:0}
+.cq-name{font-size:14px;font-weight:700;display:flex;align-items:center;gap:5px;margin-bottom:2px}
+.cq-desc{font-size:11px;line-height:1.4}
+.cq-badge{font-size:10px;font-weight:600;padding:1px 6px;
+  border-radius:100px;white-space:nowrap;color:#fff}
 
 /* 仕切り */
-.sep{height:0.5px;background:var(--border);margin:12px 0}
+.sep{height:0.5px;background:var(--border);margin:4px 0 10px}
 
 /* 結果ボタン */
-.results-btn{display:block;width:100%;padding:12px;margin-top:6px;
-  border:0.5px solid var(--border2);border-radius:var(--radius);
-  font-size:13px;font-weight:500;color:var(--text2);text-align:center;
-  cursor:pointer;background:var(--bg);font-family:inherit;
-  transition:background .15s}
+.results-btn{display:flex;align-items:center;gap:12px;padding:12px 16px;
+  background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius-lg);
+  cursor:pointer;font-family:inherit;width:100%;
+  transition:background .15s;margin-bottom:4px}
 .results-btn:hover{background:var(--bg2)}
+.results-btn-icon{font-size:20px;flex-shrink:0}
+.results-btn-body{flex:1;text-align:left}
+.results-btn-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:1px}
+.results-btn-sub{font-size:12px;color:var(--text2)}
+.results-btn-arr{font-size:18px;color:var(--text3)}
 
 /* フッター */
-.note{font-size:11px;color:var(--text3);text-align:center;line-height:1.8;margin-top:14px}
+.note{font-size:12px;color:var(--text3);text-align:center;line-height:1.8;margin-top:12px}
 </style>
 </head>
 <body>
@@ -97,8 +111,8 @@ body{
   </div>
 
   <!-- 名前入力 -->
-  <div class="name-row">
-    <span class="name-row-label">名前</span>
+  <div class="name-bar">
+    <span class="name-label">名前</span>
     <input class="name-input" id="name-input" type="text" maxlength="30"
       placeholder="山田 太郎" autocomplete="name"
       oninput="document.getElementById('name-err').style.display='none'">
@@ -107,109 +121,93 @@ body{
 
   <!-- 基礎知性 -->
   <p class="sec">基礎知性</p>
-  <div class="test-row" onclick="goTo('iq_test.html')">
-    <div class="dot" style="background:#2563a8"></div>
-    <div class="icon">🧮</div>
-    <div class="body">
-      <div class="row-name" style="color:#2563a8">IQ
-        <span class="badge" style="background:#eef3fb;color:#1d4f8a">12問</span>
-      </div>
-      <div class="row-desc">論理・推論・言語・空間認識</div>
+  <div class="grid">
+    <div class="tile" style="border-color:rgba(37,99,168,0.3);background:#eef3fb" onclick="goTo('iq_test.html')">
+      <div class="tile-icon">🧮</div>
+      <div class="tile-name" style="color:#2563a8">IQ</div>
+      <div class="tile-desc">論理・推論<br>言語・空間認識</div>
+      <span class="tile-q" style="color:#2563a8;background:#fff;border-color:rgba(37,99,168,0.3)">18問</span>
     </div>
-    <div class="arr">›</div>
-  </div>
-  <div class="test-row" onclick="goTo('eq_test.html')">
-    <div class="dot" style="background:#7c5cbf"></div>
-    <div class="icon">❤️</div>
-    <div class="body">
-      <div class="row-name" style="color:#7c5cbf">EQ
-        <span class="badge" style="background:#f2eefb;color:#5c3f9f">20問</span>
-      </div>
-      <div class="row-desc">自己認識・感情管理・共感力</div>
+    <div class="tile" style="border-color:rgba(124,92,191,0.3);background:#f2eefb" onclick="goTo('eq_test.html')">
+      <div class="tile-icon">❤️</div>
+      <div class="tile-name" style="color:#7c5cbf">EQ</div>
+      <div class="tile-desc">自己認識・感情管理<br>共感力</div>
+      <span class="tile-q" style="color:#7c5cbf;background:#fff;border-color:rgba(124,92,191,0.3)">20問</span>
     </div>
-    <div class="arr">›</div>
   </div>
 
   <div class="sep"></div>
 
   <!-- 他者・社会との関わり -->
   <p class="sec">他者・社会との関わり</p>
-  <div class="test-row" onclick="goTo('cq_test.html')">
-    <div class="dot" style="background:#0F766E"></div>
-    <div class="icon">🌏</div>
-    <div class="body">
-      <div class="row-name" style="color:#0F766E">CQ
-        <span class="badge" style="background:#CCFBF1;color:#0F766E">国際版</span>
-        <span class="badge" style="background:var(--bg2);color:var(--text3)">20問</span>
+  <div class="grid">
+    <!-- CQ 分割タイル（上：薄、下：濃） -->
+    <div class="cq-tile">
+      <div class="cq-half" style="background:#CCFBF1" onclick="goTo('cq_test.html')">
+        <div class="cq-icon">🌏</div>
+        <div class="cq-body">
+          <div class="cq-name" style="color:#0F766E">CQ
+            <span class="cq-badge" style="background:#0F766E">国際版</span>
+          </div>
+          <div class="cq-desc" style="color:#0F766E">異文化・グローバル</div>
+        </div>
       </div>
-      <div class="row-desc">異文化理解・グローバル対応</div>
-    </div>
-    <div class="arr">›</div>
-  </div>
-  <div class="test-row" onclick="goTo('cq_test_domestic.html')">
-    <div class="dot" style="background:#0e9488"></div>
-    <div class="icon">🏢</div>
-    <div class="body">
-      <div class="row-name" style="color:#0F766E">CQ
-        <span class="badge" style="background:#CCFBF1;color:#0e9488">国内版</span>
-        <span class="badge" style="background:var(--bg2);color:var(--text3)">20問</span>
+      <div class="cq-half" style="background:#0F766E" onclick="goTo('cq_test_domestic.html')">
+        <div class="cq-icon">🏢</div>
+        <div class="cq-body">
+          <div class="cq-name" style="color:#fff">CQ
+            <span class="cq-badge" style="background:rgba(255,255,255,0.25)">国内版</span>
+          </div>
+          <div class="cq-desc" style="color:rgba(255,255,255,0.7)">業界・世代・組織</div>
+        </div>
       </div>
-      <div class="row-desc">業界・世代・組織文化への適応</div>
     </div>
-    <div class="arr">›</div>
-  </div>
-  <p class="cq-note">国際版・国内版のどちらか関わりの多い方をお選びください</p>
-
-  <div class="test-row" onclick="goTo('sq_test.html')">
-    <div class="dot" style="background:#166534"></div>
-    <div class="icon">🤝</div>
-    <div class="body">
-      <div class="row-name" style="color:#166534">SQ
-        <span class="badge" style="background:var(--bg2);color:var(--text3)">20問</span>
-      </div>
-      <div class="row-desc">場・関係性を読む社会的知性</div>
+    <!-- SQ -->
+    <div class="tile" style="border-color:rgba(22,101,52,0.3);background:#DCFCE7" onclick="goTo('sq_test.html')">
+      <div class="tile-icon">🤝</div>
+      <div class="tile-name" style="color:#166534">SQ</div>
+      <div class="tile-desc">場・関係性を読む<br>社会的知性</div>
+      <span class="tile-q" style="color:#166534;background:#fff;border-color:rgba(22,101,52,0.3)">20問</span>
     </div>
-    <div class="arr">›</div>
   </div>
 
   <div class="sep"></div>
 
   <!-- 逆境への対処と回復 -->
   <p class="sec">逆境への対処と回復</p>
-  <div class="test-row" onclick="goTo('aq_test.html')">
-    <div class="dot" style="background:#C2500A"></div>
-    <div class="icon">⛰️</div>
-    <div class="body">
-      <div class="row-name" style="color:#C2500A">AQ
-        <span class="badge" style="background:var(--bg2);color:var(--text3)">20問</span>
-      </div>
-      <div class="row-desc">困難への対処力・諦めない力</div>
+  <div class="grid">
+    <div class="tile" style="border-color:rgba(194,80,10,0.3);background:#FFEDD5" onclick="goTo('aq_test.html')">
+      <div class="tile-icon">⛰️</div>
+      <div class="tile-name" style="color:#C2500A">AQ</div>
+      <div class="tile-desc">困難への対処力<br>諦めない力</div>
+      <span class="tile-q" style="color:#C2500A;background:#fff;border-color:rgba(194,80,10,0.3)">20問</span>
     </div>
-    <div class="arr">›</div>
-  </div>
-  <div class="test-row" onclick="goTo('rq_test.html')">
-    <div class="dot" style="background:#9F1239"></div>
-    <div class="icon">🌱</div>
-    <div class="body">
-      <div class="row-name" style="color:#9F1239">RQ
-        <span class="badge" style="background:var(--bg2);color:var(--text3)">20問</span>
-      </div>
-      <div class="row-desc">逆境からの回復力・楽観性</div>
+    <div class="tile" style="border-color:rgba(159,18,57,0.3);background:#FFE4E6" onclick="goTo('rq_test.html')">
+      <div class="tile-icon">🌱</div>
+      <div class="tile-name" style="color:#9F1239">RQ</div>
+      <div class="tile-desc">逆境からの回復力<br>楽観性</div>
+      <span class="tile-q" style="color:#9F1239;background:#fff;border-color:rgba(159,18,57,0.3)">20問</span>
     </div>
-    <div class="arr">›</div>
   </div>
 
-  <!-- 結果確認ボタン -->
-  <button class="results-btn" onclick="goToResults()">📊 テスト結果をまとめて確認する →</button>
+  <!-- 結果確認 -->
+  <button class="results-btn" onclick="goToResults()">
+    <span class="results-btn-icon">📊</span>
+    <span class="results-btn-body">
+      <span class="results-btn-title">テスト結果をまとめて確認する</span>
+      <span class="results-btn-sub" style="display:block">受験済みのテストをすべて表示</span>
+    </span>
+    <span class="results-btn-arr">›</span>
+  </button>
 
   <p class="note">
+    CQは国際版・国内版のどちらか関わりの多い方をお選びください<br>
     このテストは簡易的な目安です。正式な評価は専門機関にご相談ください。<br>
     Created by S.O.Y
   </p>
 </div>
 
 <script>
-// 前回の名前を復元
 const urlName = new URLSearchParams(window.location.search).get('name') || '';
 const savedName = localStorage.getItem('test_player_name') || localStorage.getItem('test_last_name') || '';
 const nameInput = document.getElementById('name-input');
