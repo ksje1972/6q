@@ -141,7 +141,7 @@ body{background:var(--bg3);color:var(--text);
 .eq-val{font-size:46px;font-weight:700;color:var(--accent);line-height:1}
 .result-title{font-size:20px;font-weight:700;margin-bottom:8px}
 .result-desc{font-size:13px;color:var(--text2);line-height:1.75;max-width:380px;margin:0 auto}
-.save-notice{display:flex;align-items:center;gap:8px;font-size:11px;padding:9px 12px;
+.save-notice{display:none!important;align-items:center;gap:8px;font-size:11px;padding:9px 12px;
   background:var(--info-bg);border:0.5px solid var(--info-border);
   border-radius:var(--radius);color:var(--info);margin-top:12px}
 
@@ -376,7 +376,7 @@ function showResult(){
         <div class="eq-ring"><span class="eq-lbl-sm">CQ</span><span class="eq-val">${eq}</span></div>
         <h2 class="result-title">${lvl.label}</h2>
         <p class="result-desc">${lvl.desc}</p>
-        <div id="save-status" class="save-notice">
+        <div id="save-status" class="save-notice" style="display:none">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           送信中...
         </div>
